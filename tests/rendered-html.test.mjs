@@ -1,0 +1,35 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+async function render() {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+
+  return worker.fetch(
+    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
+    { waitUntil() {}, passThroughOnException() {} },
+  );
+}
+
+test("server-renders the finished KitchenRx shell", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+  assert.match(html, /<title>KitchenRx — Practical meal support<\/title>/i);
+  assert.match(html, /Food support for the day you actually have/);
+  assert.match(html, /This prototype runs locally in the browser/);
+  assert.match(html, /Recipe explorer/);
+  assert.match(html, /Soft Egg &amp; Scallion Rice/);
+  assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
+});
+
+test("server-rendered copy stays non-medical and privacy-forward", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /food-support prototype, not medical advice/i);
+  assert.match(html, /No backend · No login · No data collection/);
+  assert.doesNotMatch(html, /cures|clinically proven|prescribed for|recommended for patients/i);
+});
