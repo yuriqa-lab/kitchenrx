@@ -1,4 +1,4 @@
-import type { FilterState, Recipe } from "../types/recipe";
+import type { FilterState, Language, Recipe } from "../types/recipe";
 
 export const SAVED_RECIPES_KEY = "kitchenrx:saved-recipes:v1";
 
@@ -18,8 +18,9 @@ export function filterRecipes(recipes: Recipe[], filters: FilterState, savedOnly
   });
 }
 
-export function formatMealList(recipes: Pick<Recipe, "title">[]): string {
-  return `KitchenRx Meal List\n\n${recipes.map((recipe) => `- ${recipe.title}`).join("\n")}`;
+export function formatMealList(recipes: Pick<Recipe, "translations">[], language: Language): string {
+  const title = language === "ja" ? "KitchenRx 献立リスト" : "KitchenRx Meal List";
+  return `${title}\n\n${recipes.map((recipe) => `- ${(recipe.translations[language] ?? recipe.translations.en).title}`).join("\n")}`;
 }
 
 export function parseSavedRecipeIds(rawValue: string | null, validIds: Set<string>): { ids: string[]; repaired: boolean } {

@@ -1,21 +1,35 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { filterRecipes, formatMealList, parseSavedRecipeIds } from "../app/lib/recipeLogic.ts";
+import { recipes } from "../app/data/recipes.ts";
+import { careContextLabels, getUiCopy, ingredientFilterLabels, mealTypeLabels } from "../app/i18n/translations.ts";
+import { LANGUAGE_KEY, localizedValue, localizeRecipe, resolveInitialLanguage } from "../app/lib/localization.ts";
+import { filterRecipes, formatMealList, parseSavedRecipeIds, SAVED_RECIPES_KEY } from "../app/lib/recipeLogic.ts";
+import { careContexts, ingredientFilters, mealTypes } from "../app/types/recipe.ts";
 
 const samples = [
   {
     id: "rice",
-    title: "Rice Bowl",
-    mealType: "Lunch",
-    careContexts: ["Quick preparation"],
-    featuredIngredients: ["Rice", "Eggs"],
+    mealType: "lunch",
+    prepMinutes: 12,
+    careContexts: ["quickPreparation"],
+    featuredIngredients: ["rice", "eggs"],
+    accent: "sage",
+    translations: {
+      en: { title: "Rice Bowl", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
+      ja: { title: "ごはんボウル", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
+    },
   },
   {
     id: "soup",
-    title: "Tofu Soup",
-    mealType: "Dinner",
-    careContexts: ["Gentle meal", "Comfort food"],
-    featuredIngredients: ["Tofu", "Soup"],
+    mealType: "dinner",
+    prepMinutes: 18,
+    careContexts: ["gentleMeal", "comfortFood"],
+    featuredIngredients: ["tofu", "soup"],
+    accent: "pink",
+    translations: {
+      en: { title: "Tofu Soup", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
+      ja: { title: "豆腐スープ", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
+    },
   },
 ];
 
@@ -23,11 +37,21 @@ const noFilters = { mealTypes: [], careContexts: [], ingredients: [] };
 
 test("filtering combines groups and matches selected values broadly within a group", () => {
   const filters = {
-    mealTypes: ["Lunch"],
-    careContexts: ["Quick preparation", "Gentle meal"],
-    ingredients: ["Eggs", "Tofu"],
+    mealTypes: ["lunch"],
+    careContexts: ["quickPreparation", "gentleMeal"],
+    ingredients: ["eggs", "tofu"],
   };
   assert.deepEqual(filterRecipes(samples, filters, false, new Set()).map(({ id }) => id), ["rice"]);
+});
+
+test("filtering results do not change with localized presentation data", () => {
+  const translatedSamples = samples.map((recipe) => ({
+    ...recipe,
+    translations: { ...recipe.translations, ja: { ...recipe.translations.ja, title: `別名 ${recipe.id}` } },
+  }));
+  const filters = { mealTypes: [], careContexts: ["gentleMeal"], ingredients: ["tofu"] };
+  assert.deepEqual(filterRecipes(samples, filters, false, new Set()).map(({ id }) => id), ["soup"]);
+  assert.deepEqual(filterRecipes(translatedSamples, filters, false, new Set()).map(({ id }) => id), ["soup"]);
 });
 
 test("saved-only filtering returns only known saved recipes", () => {
@@ -41,6 +65,204 @@ test("saved recipe parsing repairs malformed and unavailable values", () => {
   assert.deepEqual(parseSavedRecipeIds(null, validIds), { ids: [], repaired: false });
 });
 
-test("meal list formatting creates readable plain text", () => {
-  assert.equal(formatMealList([{ title: "Rice Bowl" }, { title: "Tofu Soup" }]), "KitchenRx Meal List\n\n- Rice Bowl\n- Tofu Soup");
+test("language selection prefers valid storage, then Japanese browser language, then English", () => {
+  assert.equal(resolveInitialLanguage("ja", ["en-US"]), "ja");
+  assert.equal(resolveInitialLanguage("en", ["ja-JP"]), "en");
+  assert.equal(resolveInitialLanguage(null, ["fr-FR", "ja-JP"]), "ja");
+  assert.equal(resolveInitialLanguage(null, ["fr-FR"]), "en");
+  assert.equal(resolveInitialLanguage("unsupported", ["de-DE"]), "en");
+});
+
+test("missing Japanese content safely falls back to English", () => {
+  assert.deepEqual(localizedValue({ en: { title: "Fallback" } }, "ja"), { title: "Fallback" });
+});
+
+test("meal list formatting uses localized headings and recipe titles", () => {
+  assert.equal(formatMealList(samples, "en"), "KitchenRx Meal List\n\n- Rice Bowl\n- Tofu Soup");
+  assert.equal(formatMealList(samples, "ja"), "KitchenRx 献立リスト\n\n- ごはんボウル\n- 豆腐スープ");
+});
+
+test("language and saved recipes use separate stable storage keys", () => {
+  assert.equal(LANGUAGE_KEY, "kitchenrx:language:v1");
+  assert.equal(SAVED_RECIPES_KEY, "kitchenrx:saved-recipes:v1");
+  assert.notEqual(LANGUAGE_KEY, SAVED_RECIPES_KEY);
+});
+
+test("all 24 stable recipe records contain complete English and Japanese content", () => {
+  assert.equal(recipes.length, 24);
+  assert.equal(new Set(recipes.map(({ id }) => id)).size, 24);
+
+  for (const recipe of recipes) {
+    for (const language of ["en", "ja"]) {
+      const content = recipe.translations[language];
+      assert.ok(content.title.length > 0, `${recipe.id} is missing a ${language} title`);
+      assert.ok(content.description.length > 0, `${recipe.id} is missing a ${language} description`);
+      assert.ok(content.ingredients.length > 0, `${recipe.id} is missing ${language} ingredients`);
+      assert.ok(content.steps.length > 0, `${recipe.id} is missing ${language} steps`);
+      assert.ok(content.whyItMayHelp.length > 0, `${recipe.id} is missing a ${language} care note`);
+    }
+  }
+});
+
+test("Japanese display titles expose only intentional line-break opportunities", () => {
+  for (const recipe of recipes) {
+    const content = recipe.translations.ja;
+    assert.ok(content.titleSegments?.length, `${recipe.id} is missing Japanese title segments`);
+    assert.equal(
+      content.titleSegments.join("").replaceAll(" ", ""),
+      content.title.replaceAll(" ", ""),
+      `${recipe.id} Japanese title segments do not reconstruct its title`,
+    );
+  }
+
+  assert.deepEqual(
+    recipes.at(-1).translations.ja.titleSegments,
+    ["いちごと豆腐の", "ヨーグルトカップ"],
+  );
+
+  const hero = getUiCopy("ja").hero;
+  assert.deepEqual(hero.titleSegments, ["今日の自分に", "無理のない、", "食の支えを。"]);
+  assert.equal(hero.titleSegments.join(""), hero.title);
+});
+
+test("the original 12 IDs remain unchanged and the approved 12 IDs are added in order", () => {
+  assert.deepEqual(recipes.map(({ id }) => id), [
+    "soft-egg-rice",
+    "strawberry-oat-cup",
+    "tofu-rice-soup",
+    "lemon-chicken-tray",
+    "tomato-tofu-pasta",
+    "egg-vegetable-rice-bowl",
+    "chicken-noodle-soup",
+    "pear-yogurt-bowl",
+    "tofu-egg-bites",
+    "one-pan-vegetable-pasta",
+    "ginger-tofu-rice",
+    "tomato-egg-drop-soup",
+    "banana-kinako-toast",
+    "pumpkin-egg-rice-porridge",
+    "vegetable-frittata-tray",
+    "sesame-tofu-noodle-salad",
+    "miso-tofu-soboro-rice",
+    "chicken-vegetable-rice-balls",
+    "chicken-vegetable-pasta-soup",
+    "creamy-pumpkin-pasta-soup",
+    "sheet-pan-sesame-tofu",
+    "apple-cinnamon-compote",
+    "savory-rice-egg-bites",
+    "strawberry-tofu-yogurt-cup",
+  ]);
+});
+
+test("expanded recipe records have consistent structure and use every supported filter", () => {
+  const seenMeals = new Set();
+  const seenContexts = new Set();
+  const seenIngredients = new Set();
+  const englishTitles = new Set();
+  const japaneseTitles = new Set();
+
+  for (const recipe of recipes) {
+    assert.ok(recipe.prepMinutes >= 5 && recipe.prepMinutes <= 60, `${recipe.id} has an implausible preparation time`);
+    assert.ok(mealTypes.includes(recipe.mealType), `${recipe.id} has an unsupported meal type`);
+    assert.ok(recipe.careContexts.length > 0, `${recipe.id} needs at least one care context`);
+    assert.ok(recipe.featuredIngredients.length > 0, `${recipe.id} needs at least one ingredient filter`);
+    assert.equal(recipe.translations.en.ingredients.length, recipe.translations.ja.ingredients.length, `${recipe.id} ingredient counts differ by language`);
+    assert.equal(recipe.translations.en.steps.length, recipe.translations.ja.steps.length, `${recipe.id} step counts differ by language`);
+    assert.ok(!englishTitles.has(recipe.translations.en.title), `${recipe.id} repeats an English title`);
+    assert.ok(!japaneseTitles.has(recipe.translations.ja.title), `${recipe.id} repeats a Japanese title`);
+    englishTitles.add(recipe.translations.en.title);
+    japaneseTitles.add(recipe.translations.ja.title);
+    seenMeals.add(recipe.mealType);
+    recipe.careContexts.forEach((value) => {
+      assert.ok(careContexts.includes(value), `${recipe.id} has an unsupported care context`);
+      seenContexts.add(value);
+    });
+    recipe.featuredIngredients.forEach((value) => {
+      assert.ok(ingredientFilters.includes(value), `${recipe.id} has an unsupported ingredient filter`);
+      seenIngredients.add(value);
+    });
+  }
+
+  assert.deepEqual([...seenMeals].sort(), [...mealTypes].sort());
+  assert.deepEqual([...seenContexts].sort(), [...careContexts].sort());
+  assert.deepEqual([...seenIngredients].sort(), [...ingredientFilters].sort());
+});
+
+test("24-recipe filter coverage remains stable", () => {
+  const counts = (values, getValues) => Object.fromEntries(values.map((value) => [value, recipes.filter((recipe) => getValues(recipe).includes(value)).length]));
+  assert.deepEqual(counts(mealTypes, (recipe) => [recipe.mealType]), { breakfast: 5, lunch: 7, dinner: 7, snack: 5 });
+  assert.deepEqual(counts(careContexts, (recipe) => recipe.careContexts), {
+    lowEnergy: 6,
+    gentleMeal: 12,
+    familyMeal: 11,
+    highProtein: 12,
+    comfortFood: 7,
+    quickPreparation: 12,
+  });
+  assert.deepEqual(counts(ingredientFilters, (recipe) => recipe.featuredIngredients), {
+    rice: 9,
+    eggs: 7,
+    tofu: 8,
+    chicken: 4,
+    vegetables: 18,
+    pasta: 6,
+    soup: 6,
+    fruit: 5,
+  });
+});
+
+test("every one of the 24 recipes remains reachable through its combined filters", () => {
+  for (const recipe of recipes) {
+    const filters = {
+      mealTypes: [recipe.mealType],
+      careContexts: [recipe.careContexts[0]],
+      ingredients: [recipe.featuredIngredients[0]],
+    };
+    const ids = filterRecipes(recipes, filters, false, new Set()).map(({ id }) => id);
+    assert.ok(ids.includes(recipe.id), `${recipe.id} cannot be reached through its declared filters`);
+  }
+});
+
+test("every listed ingredient in recipes 13–24 is used in the preparation steps in both languages", () => {
+  const ingredientKeywords = {
+    "banana-kinako-toast": { en: ["bread", "banana", "yogurt", "kinako", "honey"], ja: ["食パン", "バナナ", "ヨーグルト", "きなこ", "はちみつ"] },
+    "pumpkin-egg-rice-porridge": { en: ["rice", "pumpkin", "broth", "egg", "soy sauce"], ja: ["ごはん", "かぼちゃ", "スープ", "卵", "しょうゆ"] },
+    "vegetable-frittata-tray": { en: ["egg", "vegetable", "milk", "olive oil", "cheese", "black pepper"], ja: ["卵", "野菜", "牛乳", "オリーブ油", "チーズ", "黒こしょう"] },
+    "sesame-tofu-noodle-salad": { en: ["pasta", "tofu", "cucumber", "carrot", "sesame paste", "soy sauce", "rice vinegar", "water"], ja: ["パスタ", "豆腐", "きゅうり", "にんじん", "練りごま", "しょうゆ", "米酢", "水"] },
+    "miso-tofu-soboro-rice": { en: ["tofu", "rice", "carrot", "mushroom", "miso", "soy sauce", "water", "sesame oil"], ja: ["豆腐", "ごはん", "にんじん", "きのこ", "味噌", "しょうゆ", "水", "ごま油"] },
+    "chicken-vegetable-rice-balls": { en: ["rice", "chicken", "carrot", "peas", "soy sauce", "sugar", "oil"], ja: ["ごはん", "鶏", "にんじん", "グリーンピース", "しょうゆ", "砂糖", "油"] },
+    "chicken-vegetable-pasta-soup": { en: ["chicken", "broth", "pasta", "carrot", "celery", "peas", "thyme"], ja: ["鶏", "スープ", "パスタ", "にんじん", "セロリ", "グリーンピース", "タイム"] },
+    "creamy-pumpkin-pasta-soup": { en: ["pumpkin", "pasta", "vegetable broth", "milk", "spinach", "thyme", "cheese"], ja: ["かぼちゃ", "パスタ", "野菜だし", "牛乳", "ほうれん草", "タイム", "チーズ"] },
+    "sheet-pan-sesame-tofu": { en: ["tofu", "broccoli", "bell pepper", "cornstarch", "sesame oil", "soy sauce", "sesame seeds"], ja: ["豆腐", "ブロッコリー", "パプリカ", "片栗粉", "ごま油", "しょうゆ", "いりごま"] },
+    "apple-cinnamon-compote": { en: ["apple", "water", "lemon juice", "cinnamon", "maple syrup"], ja: ["りんご", "水", "レモン汁", "シナモン", "メープルシロップ"] },
+    "savory-rice-egg-bites": { en: ["rice", "egg", "vegetable", "cheese", "soy sauce", "oil"], ja: ["ごはん", "卵", "野菜", "チーズ", "しょうゆ", "油"] },
+    "strawberry-tofu-yogurt-cup": { en: ["tofu", "yogurt", "strawberr", "honey", "lemon", "oats"], ja: ["豆腐", "ヨーグルト", "いちご", "はちみつ", "レモン", "オーツ"] },
+  };
+
+  for (const [id, languages] of Object.entries(ingredientKeywords)) {
+    const recipe = recipes.find((candidate) => candidate.id === id);
+    assert.ok(recipe, `${id} is missing`);
+    for (const language of ["en", "ja"]) {
+      const ingredientText = recipe.translations[language].ingredients.join(" ").toLowerCase();
+      const stepText = recipe.translations[language].steps.join(" ").toLowerCase();
+      for (const keyword of languages[language]) {
+        assert.ok(ingredientText.includes(keyword.toLowerCase()), `${id} ${language} ingredient list is missing ${keyword}`);
+        assert.ok(stepText.includes(keyword.toLowerCase()), `${id} ${language} steps do not use ${keyword}`);
+      }
+    }
+  }
+});
+
+test("filter labels and recipe presentation translate without changing stable IDs", () => {
+  assert.equal(mealTypeLabels.ja.breakfast, "朝食");
+  assert.equal(careContextLabels.ja.quickPreparation, "手早く準備");
+  assert.equal(ingredientFilterLabels.ja.vegetables, "野菜");
+  assert.equal(mealTypeLabels.en.breakfast, "Breakfast");
+
+  const source = recipes[0];
+  const english = localizeRecipe(source, "en");
+  const japanese = localizeRecipe(source, "ja");
+  assert.equal(english.id, japanese.id);
+  assert.notEqual(english.title, japanese.title);
+  assert.equal(source.id, "soft-egg-rice");
 });

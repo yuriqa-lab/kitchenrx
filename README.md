@@ -2,7 +2,7 @@
 
 KitchenRx is a care-oriented recipe and meal-support prototype by Yuriqa Lab. It helps people explore realistic meal ideas using practical contexts such as available energy, meal type, preparation effort, and ingredients already on hand.
 
-This is a frontend-only portfolio prototype, not a production medical service.
+This is a browser-focused portfolio prototype with no application data backend, not a production medical service.
 
 ## Why it exists
 
@@ -10,13 +10,16 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 
 ## Features
 
-- 12 original, locally stored sample recipes
+- Complete Japanese and English interface switching without a page reload
+- 24 locally stored recipes written for this prototype, with bilingual titles, descriptions, ingredients, steps, and practical notes
 - Meal type, care context, and ingredient filters
 - Combined filters, result counts, clear-all controls, and an empty state
 - Accessible recipe details with ingredients, preparation steps, and careful practical notes
 - Save-for-later support stored only in the browser with safe malformed-data handling
+- Language changes preserve active filters, saved recipes, and the open recipe
+- A separately stored language preference, browser-language detection on first visit, and English fallback
 - A saved-only recipe view
-- Plain-text meal-list copying with success and error feedback
+- Localized plain-text meal-list copying with success and error feedback
 - Responsive layouts, visible focus states, reduced-motion support, and keyboard-friendly controls
 - Visible privacy and non-medical disclaimers
 
@@ -25,10 +28,10 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 - React 19
 - TypeScript
 - Vite through the lightweight Vinext application runtime
-- Next-compatible App Router components
+- Next.js App Router components, built through the lightweight Vinext runtime
 - Plain CSS
 - Node.js built-in test runner
-- `localStorage` for device-local saved recipe IDs
+- `localStorage` for device-local saved recipe IDs and the independent language preference
 
 No backend, authentication, database, external recipe API, analytics, tracking, or personal-data collection is used.
 
@@ -63,8 +66,9 @@ npm test
 ```text
 app/
   components/       Interactive application and recipe detail UI
-  data/             Original local recipe collection
-  lib/              Filtering, persistence parsing, and list formatting logic
+  data/             Stable recipe data with localized content
+  i18n/             Japanese and English interface translations
+  lib/              Filtering, localization, persistence parsing, and list formatting logic
   types/            Shared recipe and filter types
   globals.css       Complete visual system and responsive styles
   layout.tsx        Metadata and document shell
@@ -76,7 +80,7 @@ worker/              Static application runtime entry
 
 ## Privacy
 
-KitchenRx runs locally in the browser. It does not collect or send personal data, health data, or browsing behavior. Saved recipe IDs remain in the current browser through `localStorage` and can be removed by unsaving recipes or clearing site storage.
+KitchenRx runs locally in the browser. It does not collect or send personal data, health data, or browsing behavior. Saved recipe IDs remain in the current browser under `kitchenrx:saved-recipes:v1`. The independent language preference is stored under `kitchenrx:language:v1`. Both can be removed by clearing site storage.
 
 ## Non-medical disclaimer
 
@@ -90,20 +94,35 @@ Yuriqa Lab explores practical intersections between AI, care systems, hospitalit
 
 ## Project status
 
-KitchenRx is a scoped v1 prototype and portfolio project. Its recipe collection is intentionally small, local, and illustrative. It has not undergone clinical validation and is not intended for medical use.
+KitchenRx is a scoped v1.1 bilingual portfolio prototype with 24 recipes written for this prototype. Its recipe collection remains local and illustrative. It has not undergone clinical validation and is not intended for medical use.
 
 ## Future improvements
 
 - Richer original recipe collections
 - More flexible ingredient matching
 - Improved meal-plan organization and printable lists
-- Multilingual support
+- Additional languages beyond Japanese and English
 - Formal accessibility and usability testing
 - Optional offline-first support
 
 ## Screenshots
 
-Screenshots can be added here in a future release. No screenshot files are included in v1.
+### Japanese recipe explorer
+
+![KitchenRx Japanese recipe explorer showing 24 recipes and bilingual filters](docs/screenshots/kitchenrx-overview-ja.jpg)
+
+### Filtering and recipe details
+
+<p align="center">
+  <img src="docs/screenshots/kitchenrx-filter-en.jpg" alt="KitchenRx English recipe explorer filtered to Snack and Fruit" width="49%">
+  <img src="docs/screenshots/kitchenrx-recipe-detail-ja.jpg" alt="KitchenRx Japanese recipe detail with ingredients, preparation steps, practical context, and non-medical disclaimer" width="49%">
+</p>
+
+### Mobile layout
+
+<p align="center">
+  <img src="docs/screenshots/kitchenrx-mobile-ja.jpg" alt="KitchenRx Japanese mobile layout with language switcher and hero content" width="390">
+</p>
 
 ## License
 
