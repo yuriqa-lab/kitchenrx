@@ -1,10 +1,17 @@
-import type { FilterState, Language, Recipe } from "../types/recipe";
+import type { FilterState, Language, NutrientId, Recipe } from "../types/recipe";
 
 export const SAVED_RECIPES_KEY = "kitchenrx:saved-recipes:v1";
 
-export function filterRecipes(recipes: Recipe[], filters: FilterState, savedOnly: boolean, savedIds: Set<string>): Recipe[] {
+export function filterRecipes(
+  recipes: Recipe[],
+  filters: FilterState,
+  savedOnly: boolean,
+  savedIds: Set<string>,
+  nutrientId: NutrientId | null = null,
+): Recipe[] {
   return recipes.filter((recipe) => {
     if (savedOnly && !savedIds.has(recipe.id)) return false;
+    if (nutrientId && !recipe.nutrientTags.includes(nutrientId)) return false;
 
     const matchesMeal = filters.mealTypes.length === 0 || filters.mealTypes.includes(recipe.mealType);
     const matchesContext =

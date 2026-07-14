@@ -45,6 +45,9 @@ interface UiCopy {
     foodInfoTitle: string;
     disclaimer: string;
     recipeTagsLabel: string;
+    relatedRecipeCount: (count: number) => string;
+    viewRelatedRecipes: string;
+    demoHint: string;
   };
   explorer: {
     eyebrow: string;
@@ -66,6 +69,9 @@ interface UiCopy {
     emptySavedText: string;
     emptyResultsText: string;
     showAll: string;
+    nutrientResultTitle: (nutrient: string) => string;
+    nutrientResultText: string;
+    removeNutrientFilter: string;
   };
   mealPlan: {
     eyebrow: string;
@@ -121,8 +127,8 @@ const en: UiCopy = {
     eyebrow: "A Yuriqa Lab prototype",
     title: "Food support for the day you actually have.",
     lede: "KitchenRx helps you explore realistic meals by energy, ingredients, and everyday routines—without turning care into a clinical task.",
-    explore: "Explore the recipes",
-    careApproach: "Read the care approach",
+    explore: "Explore food & nutrients",
+    careApproach: "Browse all recipes",
     noticesLabel: "Important information",
     disclaimerTitle: "Food support, not medical advice.",
     disclaimerText: "For medical or diet-specific needs, consult a qualified professional.",
@@ -152,7 +158,10 @@ const en: UiCopy = {
     openSource: (publisher) => `Read source from ${publisher}`,
     foodInfoTitle: "Food information only",
     disclaimer: "This guide supports food discovery. It is not medical advice, does not promise changes to vision or health, and does not provide supplement instructions.",
-    recipeTagsLabel: "Related food nutrients",
+    recipeTagsLabel: "Food nutrient connections",
+    relatedRecipeCount: (count) => `${count} evidence-linked ${count === 1 ? "recipe" : "recipes"}`,
+    viewRelatedRecipes: "View related recipes",
+    demoHint: "Next, open a recipe to see why its ingredients are included and review the public sources.",
   },
   explorer: {
     eyebrow: "Recipe explorer",
@@ -174,6 +183,9 @@ const en: UiCopy = {
     emptySavedText: "Save a recipe from the full shelf and it will stay on this device.",
     emptyResultsText: "Try removing one filter, or return to the full recipe shelf.",
     showAll: "Show all recipes",
+    nutrientResultTitle: (nutrient) => `Recipes connected to ${nutrient}`,
+    nutrientResultText: "These recipes contain an ingredient mapped to the selected nutrient in the KitchenRx evidence guide.",
+    removeNutrientFilter: "Remove nutrient filter",
   },
   mealPlan: {
     eyebrow: "Your meal list",
@@ -211,21 +223,21 @@ const en: UiCopy = {
     minutes: (minutes) => `${minutes} min`,
     contextsLabel: "Recipe contexts",
     view: "View recipe",
-    saveLabel: (title) => `Save ${title}`,
-    removeLabel: (title) => `Remove ${title}`,
+    saveLabel: (title) => `Save ${title} to the meal list`,
+    removeLabel: (title) => `Remove ${title} from the meal list`,
     close: "Close recipe details",
     ingredients: "Ingredients",
     preparation: "Preparation",
     why: "Why this may help",
     safety: "Practical food-support context only — not medical advice.",
-    saveForLater: "Save for later",
-    removeFromSaved: "Remove from saved",
+    saveForLater: "Save to meal list",
+    removeFromSaved: "Remove from meal list",
   },
   toast: {
     savedDataReset: "Saved recipes were reset because the stored list could not be read.",
     storageFailed: "This browser could not store the change. It will not persist after a reload.",
-    recipeSaved: (title) => `${title} saved for later.`,
-    recipeRemoved: (title) => `${title} removed from your saved list.`,
+    recipeSaved: (title) => `${title} saved to your meal list.`,
+    recipeRemoved: (title) => `${title} removed from your meal list.`,
     copySuccess: "Meal list copied to your clipboard.",
     copyFailed: "The meal list could not be copied. Please check your browser permissions.",
     languageStorageFailed: "The language changed, but this browser could not remember the preference.",
@@ -245,8 +257,8 @@ const ja: UiCopy = {
     title: "今日の自分に無理のない、食の支えを。",
     titleSegments: ["今日の自分に", "無理のない、", "食の支えを。"],
     lede: "KitchenRxは、今日の元気、手元の食材、いつもの暮らしに合わせて、現実的な食事を探すためのツールです。ケアを難しい作業に変えず、できることから選べます。",
-    explore: "レシピを探す",
-    careApproach: "ケアの考え方を読む",
+    explore: "食材と栄養素を見る",
+    careApproach: "すべてのレシピを見る",
     noticesLabel: "大切なお知らせ",
     disclaimerTitle: "食の支援であり、医療助言ではありません。",
     disclaimerText: "医療上または個別の食事制限に関する相談は、資格を持つ専門家へご相談ください。",
@@ -277,7 +289,10 @@ const ja: UiCopy = {
     openSource: (publisher) => `${publisher}の出典を開く`,
     foodInfoTitle: "食生活上の情報です",
     disclaimer: "このガイドは食材を知るためのもので、医療助言ではありません。視力や健康状態の変化を約束せず、サプリメントの服用方法も案内しません。",
-    recipeTagsLabel: "関連する食品由来の栄養素",
+    recipeTagsLabel: "食品と栄養素のつながり",
+    relatedRecipeCount: (count) => `根拠食材を使うレシピ ${count}件`,
+    viewRelatedRecipes: "関連レシピを見る",
+    demoHint: "次にレシピを開くと、食材を掲載する理由と公的な出典を確認できます。",
   },
   explorer: {
     eyebrow: "レシピ検索",
@@ -299,6 +314,9 @@ const ja: UiCopy = {
     emptySavedText: "レシピを保存すると、この端末のブラウザに一覧が残ります。",
     emptyResultsText: "条件をひとつ外すか、すべてのレシピに戻ってみてください。",
     showAll: "すべてのレシピを見る",
+    nutrientResultTitle: (nutrient) => `${nutrient}とつながるレシピ`,
+    nutrientResultText: "選択した栄養素と、KitchenRxの根拠ガイドで対応づけた食材を使うレシピです。",
+    removeNutrientFilter: "栄養素の絞り込みを解除",
   },
   mealPlan: {
     eyebrow: "献立リスト",
@@ -336,21 +354,21 @@ const ja: UiCopy = {
     minutes: (minutes) => `${minutes}分`,
     contextsLabel: "レシピの特徴",
     view: "レシピを見る",
-    saveLabel: (title) => `${title}を保存する`,
-    removeLabel: (title) => `${title}を保存から外す`,
+    saveLabel: (title) => `${title}を献立リストに保存する`,
+    removeLabel: (title) => `${title}を献立リストから外す`,
     close: "レシピ詳細を閉じる",
     ingredients: "材料",
     preparation: "作り方",
     why: "このレシピが役立つ場面",
     safety: "日々の食事を支えるための情報であり、医療助言ではありません。",
-    saveForLater: "あとで見るに保存",
-    removeFromSaved: "保存から外す",
+    saveForLater: "献立リストに保存",
+    removeFromSaved: "献立リストから外す",
   },
   toast: {
     savedDataReset: "保存済みレシピのデータを読み込めなかったため、一覧をリセットしました。",
     storageFailed: "このブラウザに変更を保存できませんでした。再読み込み後には引き継がれません。",
-    recipeSaved: (title) => `${title}を保存しました。`,
-    recipeRemoved: (title) => `${title}を保存から外しました。`,
+    recipeSaved: (title) => `${title}を献立リストに保存しました。`,
+    recipeRemoved: (title) => `${title}を献立リストから外しました。`,
     copySuccess: "献立リストをクリップボードへコピーしました。",
     copyFailed: "献立リストをコピーできませんでした。ブラウザの権限をご確認ください。",
     languageStorageFailed: "表示言語は切り替わりましたが、このブラウザに設定を保存できませんでした。",

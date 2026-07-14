@@ -60,14 +60,21 @@ export function KitchenRxApp() {
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [savedOnly, setSavedOnly] = useState(false);
   const [selectedNutrientId, setSelectedNutrientId] = useState<NutrientId>("lutein");
+  const [recipeNutrientFilter, setRecipeNutrientFilter] = useState<NutrientId | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
   const [storageReady, setStorageReady] = useState(false);
+  const nutrientResultsRef = useRef<HTMLDivElement>(null);
   const validRecipeIds = useMemo(() => new Set(recipes.map((recipe) => recipe.id)), []);
   const copy = getUiCopy(language);
   const selectedNutrient = nutrients.find((nutrient) => nutrient.id === selectedNutrientId) ?? nutrients[0];
   const selectedNutrientContent = selectedNutrient.translations[language] ?? selectedNutrient.translations.en;
   const selectedIngredients = getIngredientsForNutrient(selectedNutrientId);
+  const selectedNutrientRecipeCount = recipes.filter((recipe) => recipe.nutrientTags.includes(selectedNutrientId)).length;
+  const filteredNutrient = nutrients.find((nutrient) => nutrient.id === recipeNutrientFilter) ?? null;
+  const filteredNutrientContent = filteredNutrient
+    ? filteredNutrient.translations[language] ?? filteredNutrient.translations.en
+    : null;
 
   useEffect(() => {
     const storedLanguage = window.localStorage.getItem(LANGUAGE_KEY);
@@ -103,11 +110,11 @@ export function KitchenRxApp() {
   }, [toast]);
 
   const visibleRecipes = useMemo(
-    () => filterRecipes(recipes, filters, savedOnly, savedIds),
-    [filters, savedOnly, savedIds],
+    () => filterRecipes(recipes, filters, savedOnly, savedIds, recipeNutrientFilter),
+    [filters, savedOnly, savedIds, recipeNutrientFilter],
   );
 
-  const activeFilterCount = filters.mealTypes.length + filters.careContexts.length + filters.ingredients.length;
+  const activeFilterCount = filters.mealTypes.length + filters.careContexts.length + filters.ingredients.length + (recipeNutrientFilter ? 1 : 0);
   const savedRecipes = recipes.filter((recipe) => savedIds.has(recipe.id));
 
   function changeLanguage(nextLanguage: Language) {
@@ -155,6 +162,19 @@ export function KitchenRxApp() {
   function clearFilters() {
     setFilters(emptyFilters);
     setSavedOnly(false);
+    setRecipeNutrientFilter(null);
+  }
+
+  function showRelatedRecipes() {
+    setFilters(emptyFilters);
+    setSavedOnly(false);
+    setRecipeNutrientFilter(selectedNutrientId);
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        nutrientResultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        nutrientResultsRef.current?.focus({ preventScroll: true });
+      });
+    });
   }
 
   async function copyMealList() {
@@ -194,6 +214,7 @@ export function KitchenRxApp() {
             type="button"
             aria-pressed={savedOnly}
             onClick={() => {
+              setRecipeNutrientFilter(null);
               setSavedOnly((value) => !value);
               document.querySelector("#recipe-explorer")?.scrollIntoView({ behavior: "smooth" });
             }}
@@ -211,8 +232,8 @@ export function KitchenRxApp() {
             <h1 id="hero-title"><SegmentedText text={copy.hero.title} segments={copy.hero.titleSegments} /></h1>
             <p className="hero-lede">{copy.hero.lede}</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#recipe-explorer">{copy.hero.explore} <span aria-hidden="true">↓</span></a>
-              <a className="text-link" href="#care-notes">{copy.hero.careApproach} <span aria-hidden="true">→</span></a>
+              <a className="button button-primary" href="#nutrition-guide">{copy.hero.explore} <span aria-hidden="true">↓</span></a>
+              <a className="text-link" href="#recipe-explorer">{copy.hero.careApproach} <span aria-hidden="true">→</span></a>
             </div>
             <div className="hero-notices" aria-label={copy.hero.noticesLabel}>
               <p><strong>{copy.hero.disclaimerTitle}</strong> {copy.hero.disclaimerText}</p>
@@ -280,6 +301,13 @@ export function KitchenRxApp() {
                 <strong>{copy.nutrition.foodInfoTitle}</strong>
                 <p>{copy.nutrition.disclaimer}</p>
               </aside>
+              <div className="nutrition-action">
+                <p>{copy.nutrition.relatedRecipeCount(selectedNutrientRecipeCount)}</p>
+                <button className="button button-primary" type="button" onClick={showRelatedRecipes}>
+                  {copy.nutrition.viewRelatedRecipes} <span aria-hidden="true">→</span>
+                </button>
+                <small>{copy.nutrition.demoHint}</small>
+              </div>
             </div>
 
             <div className="ingredient-connections">
@@ -348,6 +376,16 @@ export function KitchenRxApp() {
             </aside>
 
             <div className="results-area">
+              {recipeNutrientFilter && filteredNutrientContent && (
+                <div className="nutrient-result-banner" tabIndex={-1} ref={nutrientResultsRef}>
+                  <div>
+                    <span>{copy.nutrition.eyebrow}</span>
+                    <strong>{copy.explorer.nutrientResultTitle(filteredNutrientContent.name)}</strong>
+                    <p>{copy.explorer.nutrientResultText}</p>
+                  </div>
+                  <button type="button" onClick={() => setRecipeNutrientFilter(null)} aria-label={copy.explorer.removeNutrientFilter}>×</button>
+                </div>
+              )}
               <div className="results-toolbar">
                 <p className="result-count" aria-live="polite">{copy.explorer.resultCount(visibleRecipes.length)}</p>
                 {activeFilterCount > 0 && <p className="active-filter-note">{copy.explorer.activeFilters(activeFilterCount)}</p>}
@@ -521,10 +559,9 @@ function RecipeCard({ recipe, language, copy, index, saved, onSave, onOpen }: Re
       </div>
       <div className="recipe-card-body">
         <div className="recipe-time"><span aria-hidden="true">◷</span> {copy.recipe.minutes(recipe.prepMinutes)} <span>·</span> {careContextLabels[language][recipe.careContexts[0]]}</div>
-        <h3><SegmentedText text={content.title} segments={content.titleSegments} /></h3>
-        <p>{content.description}</p>
         {recipe.nutrientTags.length > 0 && (
           <div className="nutrient-tag-row" aria-label={copy.nutrition.recipeTagsLabel}>
+            <i aria-hidden="true">✦</i>
             {recipe.nutrientTags.map((nutrientId) => {
               const nutrient = nutrients.find((item) => item.id === nutrientId);
               if (!nutrient) return null;
@@ -533,6 +570,8 @@ function RecipeCard({ recipe, language, copy, index, saved, onSave, onOpen }: Re
             })}
           </div>
         )}
+        <h3><SegmentedText text={content.title} segments={content.titleSegments} /></h3>
+        <p>{content.description}</p>
         <div className="tag-row" aria-label={copy.recipe.contextsLabel}>
           {recipe.careContexts.slice(0, 2).map((tag) => <span key={tag}>{careContextLabels[language][tag]}</span>)}
         </div>
@@ -596,11 +635,6 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
           <p className="eyebrow"><span /> {copy.recipe.minutes(recipe.prepMinutes)} · {careContextLabels[language][recipe.careContexts[0]]}</p>
           <h2 id="dialog-title"><SegmentedText text={content.title} segments={content.titleSegments} /></h2>
           <p className="dialog-description" id="dialog-description">{content.description}</p>
-          <div className="dialog-columns">
-            <div><h3>{copy.recipe.ingredients}</h3><ul>{content.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}</ul></div>
-            <div><h3>{copy.recipe.preparation}</h3><ol>{content.steps.map((step) => <li key={step}>{step}</li>)}</ol></div>
-          </div>
-          <div className="why-note"><p className="why-label">{copy.recipe.why}</p><p>{content.whyItMayHelp}</p><small>{copy.recipe.safety}</small></div>
           {recipeEvidenceIngredients.length > 0 && (
             <div className="recipe-evidence-note">
               <p className="why-label">{copy.nutrition.whyIngredient}</p>
@@ -617,6 +651,11 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
               <small>{copy.nutrition.disclaimer}</small>
             </div>
           )}
+          <div className="dialog-columns">
+            <div><h3>{copy.recipe.ingredients}</h3><ul>{content.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}</ul></div>
+            <div><h3>{copy.recipe.preparation}</h3><ol>{content.steps.map((step) => <li key={step}>{step}</li>)}</ol></div>
+          </div>
+          <div className="why-note"><p className="why-label">{copy.recipe.why}</p><p>{content.whyItMayHelp}</p><small>{copy.recipe.safety}</small></div>
           <div className="dialog-footer">
             <div className="tag-row" aria-label={copy.explorer.ingredient}>{recipe.featuredIngredients.map((tag) => <span key={tag}>{ingredientFilterLabels[language][tag]}</span>)}</div>
             <button className={`button ${saved ? "button-secondary" : "button-primary"}`} type="button" onClick={onSave}>{saved ? copy.recipe.removeFromSaved : copy.recipe.saveForLater}</button>
