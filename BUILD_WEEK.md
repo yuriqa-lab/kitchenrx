@@ -83,14 +83,30 @@ The Phase 1 model stores source names and URLs alongside the content that uses t
 
 | Commit | Scope | Status |
 | --- | --- | --- |
-| `docs(build-week): document baseline and challenge scope` | Baseline, scope, roles, decisions, evidence plan, and submission tracking | In progress |
-| `feat(build-week): add nutrient and ingredient evidence model` | Typed bilingual nutrient, ingredient, source, and recipe-tag data | Planned |
-| `feat(build-week): add eye-health nutrient discovery UI` | Nutrient controls, card labels, food-context explanations, and source links | Planned |
-| `test(build-week): cover nutrient mapping and filtering` | Data, filter, rendering, privacy, and regression coverage | Planned |
+| `d4ee676` — `docs(build-week): document baseline and challenge scope` | Baseline, scope, roles, decisions, evidence plan, and submission tracking | Complete |
+| `1b0661a` — `feat(build-week): add nutrient and ingredient evidence model` | Typed bilingual nutrient, ingredient, source, and recipe-tag data | Complete |
+| `ed8d57e` — `feat(build-week): add eye-health nutrient discovery UI` | Nutrient controls, card labels, food-context explanations, and source links | Complete |
+| `test(build-week): cover nutrient mapping and filtering` | Data, filter, rendering, privacy, regression, and final verification coverage | Complete in this commit; see Git history for its hash |
 
 ## Test results
 
-Phase 1 verification is pending. Record the final build, TypeScript, lint, automated-test, data-consistency, secrets-scan, bilingual-content, and responsive-layout results here before push.
+Phase 1 verification completed on 2026-07-15.
+
+| Check | Result |
+| --- | --- |
+| `npm test` | Passed: production build and 22 automated tests |
+| `npm run build` | Passed: all five vinext build stages completed |
+| `npm run typecheck` | Passed: no TypeScript errors |
+| `npm run lint` | Passed: no ESLint errors or warnings |
+| Recipe and evidence consistency | Passed: 24 stable recipe IDs, bilingual content, exact ingredient-to-nutrient mapping, valid source references, and existing filter coverage |
+| `git diff --check` | Passed: no whitespace errors |
+| Secrets and personal-information scans | Passed: no credentials, absolute local home-directory paths, email addresses, personal medical details, or private preview URLs found; policy/test phrases were reviewed as intentional non-sensitive matches |
+| Dependency review | Passed: `package.json` and `package-lock.json` are unchanged from the baseline |
+| Desktop layout review | Passed at 1440 × 900 in English and Japanese; nutrient controls, source links, and tagged recipe details displayed without horizontal overflow |
+| Mobile layout review | Passed at 390 × 844 in English and Japanese; four chips form a two-column layout, ingredient cards stack, Japanese hero uses three intended lines, and recipe headings do not overflow |
+| Browser console review | Passed: no errors or warnings during the reviewed interactions |
+
+The existing save state remained readable during manual review, all 24 recipes remained visible, and nutrient selection did not alter the established meal, care-context, ingredient, or saved-recipe filters.
 
 ## Demo URL
 
@@ -101,9 +117,9 @@ No Build Week demo deployment has been created yet. Deployment remains a later, 
 - Build Week registration: complete
 - Public baseline repository: complete
 - Recoverable baseline tag: complete
-- Phase 1 implementation: in progress
+- Phase 1 implementation: complete on `build-week-amd`
 - Demo deployment: not started
 - Demo video: not started
 - Project description and screenshots: not started
-- Final privacy and claims review: pending
+- Final privacy and claims review: complete for Phase 1
 - Devpost submission: not submitted

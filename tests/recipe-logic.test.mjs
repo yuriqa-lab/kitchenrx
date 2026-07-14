@@ -1,10 +1,24 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {
+  evidenceIngredients,
+  evidenceSources,
+  getEvidenceSources,
+  getIngredientsForNutrient,
+  getNutrientIdsForIngredients,
+  nutrients,
+} from "../app/data/nutrition.ts";
 import { recipes } from "../app/data/recipes.ts";
 import { careContextLabels, getUiCopy, ingredientFilterLabels, mealTypeLabels } from "../app/i18n/translations.ts";
 import { LANGUAGE_KEY, localizedValue, localizeRecipe, resolveInitialLanguage } from "../app/lib/localization.ts";
 import { filterRecipes, formatMealList, parseSavedRecipeIds, SAVED_RECIPES_KEY } from "../app/lib/recipeLogic.ts";
-import { careContexts, ingredientFilters, mealTypes } from "../app/types/recipe.ts";
+import {
+  careContexts,
+  evidenceIngredientIds,
+  ingredientFilters,
+  mealTypes,
+  nutrientIds,
+} from "../app/types/recipe.ts";
 
 const samples = [
   {
@@ -13,6 +27,8 @@ const samples = [
     prepMinutes: 12,
     careContexts: ["quickPreparation"],
     featuredIngredients: ["rice", "eggs"],
+    evidenceIngredients: [],
+    nutrientTags: [],
     accent: "sage",
     translations: {
       en: { title: "Rice Bowl", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
@@ -25,6 +41,8 @@ const samples = [
     prepMinutes: 18,
     careContexts: ["gentleMeal", "comfortFood"],
     featuredIngredients: ["tofu", "soup"],
+    evidenceIngredients: [],
+    nutrientTags: [],
     accent: "pink",
     translations: {
       en: { title: "Tofu Soup", description: "", ingredients: [], steps: [], whyItMayHelp: "" },
@@ -265,4 +283,67 @@ test("filter labels and recipe presentation translate without changing stable ID
   assert.equal(english.id, japanese.id);
   assert.notEqual(english.title, japanese.title);
   assert.equal(source.id, "soft-egg-rice");
+});
+
+test("Phase 1 nutrient and ingredient records are complete, bilingual, and source-backed", () => {
+  assert.deepEqual(nutrients.map(({ id }) => id), [...nutrientIds]);
+  assert.deepEqual(evidenceIngredients.map(({ id }) => id), [...evidenceIngredientIds]);
+  assert.equal(new Set(evidenceSources.map(({ id }) => id)).size, evidenceSources.length);
+
+  const validSourceIds = new Set(evidenceSources.map(({ id }) => id));
+  for (const source of evidenceSources) {
+    const url = new URL(source.url);
+    assert.equal(url.protocol, "https:", `${source.id} must use HTTPS`);
+    assert.ok(source.name.length > 0 && source.publisher.length > 0, `${source.id} needs a name and publisher`);
+  }
+
+  for (const nutrient of nutrients) {
+    assert.ok(nutrient.translations.en.name.length > 0 && nutrient.translations.ja.name.length > 0);
+    assert.ok(nutrient.translations.en.shortDescription.length > 0);
+    assert.ok(nutrient.translations.ja.shortDescription.length > 0);
+    assert.ok(nutrient.sourceIds.length > 0, `${nutrient.id} needs a source`);
+    nutrient.sourceIds.forEach((sourceId) => assert.ok(validSourceIds.has(sourceId), `${nutrient.id} has an unknown source`));
+  }
+
+  for (const ingredient of evidenceIngredients) {
+    assert.ok(ingredient.translations.en.name.length > 0 && ingredient.translations.ja.name.length > 0);
+    assert.ok(ingredient.translations.en.whyIncluded.length > 0);
+    assert.ok(ingredient.translations.ja.whyIncluded.length > 0);
+    assert.ok(ingredient.nutrientIds.length > 0, `${ingredient.id} needs a nutrient mapping`);
+    ingredient.nutrientIds.forEach((nutrientId) => assert.ok(nutrientIds.includes(nutrientId)));
+    ingredient.sourceIds.forEach((sourceId) => assert.ok(validSourceIds.has(sourceId), `${ingredient.id} has an unknown source`));
+  }
+});
+
+test("nutrient selection filters the ingredient evidence without changing recipe filters", () => {
+  assert.deepEqual(getIngredientsForNutrient("lutein").map(({ id }) => id), ["spinach", "blueberries"]);
+  assert.deepEqual(getIngredientsForNutrient("zeaxanthin").map(({ id }) => id), ["spinach", "blueberries"]);
+  assert.deepEqual(getIngredientsForNutrient("vitaminE").map(({ id }) => id), ["spinach", "almonds"]);
+  assert.deepEqual(getIngredientsForNutrient("omega3").map(({ id }) => id), ["salmon"]);
+  assert.deepEqual(getNutrientIdsForIngredients(["spinach"]), ["lutein", "zeaxanthin", "vitaminE"]);
+  assert.deepEqual(getNutrientIdsForIngredients(["salmon"]), ["omega3"]);
+  assert.equal(filterRecipes(recipes, noFilters, false, new Set()).length, 24);
+});
+
+test("recipe evidence tags match exact Phase 1 ingredients while stable IDs remain unchanged", () => {
+  const taggedRecipes = recipes.filter(({ nutrientTags }) => nutrientTags.length > 0);
+  assert.deepEqual(taggedRecipes.map(({ id }) => id), ["tomato-egg-drop-soup", "creamy-pumpkin-pasta-soup"]);
+
+  for (const recipe of recipes) {
+    assert.ok(Array.isArray(recipe.evidenceIngredients));
+    assert.ok(Array.isArray(recipe.nutrientTags));
+    const expectedNutrients = getNutrientIdsForIngredients(recipe.evidenceIngredients);
+    assert.deepEqual(recipe.nutrientTags, expectedNutrients, `${recipe.id} evidence tags are inconsistent`);
+  }
+});
+
+test("source lookup ignores unknown IDs and claim wording stays within food-information boundaries", () => {
+  assert.deepEqual(getEvidenceSources(["missing-source"]), []);
+  assert.equal(getEvidenceSources(["nih-vitamin-e"])[0].publisher, "NIH Office of Dietary Supplements");
+
+  const evidenceCopy = JSON.stringify({ nutrients, evidenceIngredients, nutritionUi: [getUiCopy("en").nutrition, getUiCopy("ja").nutrition] });
+  assert.doesNotMatch(evidenceCopy, /\b(?:cures?|prevents?|guarantees?|clinically proven|restores? vision)\b/i);
+  assert.doesNotMatch(evidenceCopy, /治ります|治すことができます|予防します|視力が回復します/);
+  assert.match(getUiCopy("en").nutrition.disclaimer, /not medical advice/i);
+  assert.match(getUiCopy("ja").nutrition.disclaimer, /医療助言ではありません/);
 });
