@@ -27,6 +27,12 @@ export type CareContext = (typeof careContexts)[number];
 export type IngredientFilter = (typeof ingredientFilters)[number];
 export type Localized<T> = { en: T; ja?: T };
 
+export const nutrientIds = ["lutein", "zeaxanthin", "vitaminE", "omega3"] as const;
+export const evidenceIngredientIds = ["spinach", "almonds", "salmon", "blueberries"] as const;
+
+export type NutrientId = (typeof nutrientIds)[number];
+export type EvidenceIngredientId = (typeof evidenceIngredientIds)[number];
+
 export interface RecipeContent {
   title: string;
   titleSegments?: string[];
@@ -42,8 +48,40 @@ export interface Recipe {
   prepMinutes: number;
   careContexts: CareContext[];
   featuredIngredients: IngredientFilter[];
+  evidenceIngredients: EvidenceIngredientId[];
+  nutrientTags: NutrientId[];
   translations: Localized<RecipeContent>;
   accent: "green" | "pink" | "gold" | "sage";
+}
+
+export interface EvidenceSource {
+  id: string;
+  name: string;
+  publisher: string;
+  url: string;
+}
+
+export interface NutrientContent {
+  name: string;
+  shortDescription: string;
+}
+
+export interface NutrientProfile {
+  id: NutrientId;
+  translations: Localized<NutrientContent>;
+  sourceIds: string[];
+}
+
+export interface EvidenceIngredientContent {
+  name: string;
+  whyIncluded: string;
+}
+
+export interface EvidenceIngredientProfile {
+  id: EvidenceIngredientId;
+  nutrientIds: NutrientId[];
+  translations: Localized<EvidenceIngredientContent>;
+  sourceIds: string[];
 }
 
 export interface LocalizedRecipe extends Omit<Recipe, "translations">, RecipeContent {}

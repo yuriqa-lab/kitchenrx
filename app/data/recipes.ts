@@ -1,6 +1,8 @@
-import type { Recipe } from "../types/recipe";
+import type { EvidenceIngredientId, NutrientId, Recipe } from "../types/recipe";
 
-export const recipes: Recipe[] = [
+type RecipeSeed = Omit<Recipe, "evidenceIngredients" | "nutrientTags">;
+
+const recipeSeeds: RecipeSeed[] = [
   {
     id: "soft-egg-rice",
     mealType: "breakfast",
@@ -602,3 +604,28 @@ export const recipes: Recipe[] = [
     },
   },
 ];
+
+interface RecipeEvidenceTags {
+  evidenceIngredients: EvidenceIngredientId[];
+  nutrientTags: NutrientId[];
+}
+
+const evidenceTagsByRecipe: Partial<Record<Recipe["id"], RecipeEvidenceTags>> = {
+  "tomato-egg-drop-soup": {
+    evidenceIngredients: ["spinach"],
+    nutrientTags: ["lutein", "zeaxanthin", "vitaminE"],
+  },
+  "creamy-pumpkin-pasta-soup": {
+    evidenceIngredients: ["spinach"],
+    nutrientTags: ["lutein", "zeaxanthin", "vitaminE"],
+  },
+};
+
+export const recipes: Recipe[] = recipeSeeds.map((recipe) => {
+  const evidenceTags = evidenceTagsByRecipe[recipe.id];
+  return {
+    ...recipe,
+    evidenceIngredients: evidenceTags?.evidenceIngredients ?? [],
+    nutrientTags: evidenceTags?.nutrientTags ?? [],
+  };
+});
