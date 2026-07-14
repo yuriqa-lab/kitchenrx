@@ -603,6 +603,81 @@ const recipeSeeds: RecipeSeed[] = [
       },
     },
   },
+  {
+    id: "miso-salmon-rice-bowl",
+    mealType: "dinner",
+    prepMinutes: 28,
+    careContexts: ["familyMeal", "highProtein"],
+    featuredIngredients: ["rice", "vegetables"],
+    accent: "green",
+    translations: {
+      en: {
+        title: "Miso Salmon & Vegetable Rice Bowl",
+        description: "Oven-roasted miso salmon and vegetables served over warm rice in an easy shared bowl.",
+        ingredients: ["2 salmon fillets (120–150 g each)", "2 bowls cooked rice", "1 cup broccoli florets", "1 small carrot, thinly sliced", "1 tbsp white miso", "1 tbsp water", "1 tsp soy sauce", "1 tsp sesame oil"],
+        steps: ["Heat the oven to 200°C / 400°F and line a small sheet pan.", "Whisk the miso, water, and soy sauce together; brush half of the mixture over the salmon.", "Arrange the salmon, broccoli, and carrot on the pan. Drizzle the vegetables with sesame oil and spoon the remaining miso mixture over the salmon.", "Bake for 12–15 minutes, until the salmon flakes easily and the vegetables are tender.", "Divide the cooked rice between two bowls and top with the salmon and vegetables."],
+        whyItMayHelp: "Uses one sheet pan for the main ingredients and turns cooked rice into two complete-feeling bowls. The vegetables can be cut ahead of time.",
+      },
+      ja: {
+        title: "味噌鮭と野菜のごはんボウル",
+        titleSegments: ["味噌鮭と野菜の", "ごはんボウル"],
+        description: "味噌だれを塗った鮭と野菜をオーブンで焼き、温かいごはんにのせる取り分けやすいボウルです。",
+        ingredients: ["鮭の切り身 2切れ（1切れ120〜150g）", "温かいごはん 2杯分", "ブロッコリー 1カップ（小房に分ける）", "小さめのにんじん 1本（薄切り）", "白味噌 大さじ1", "水 大さじ1", "しょうゆ 小さじ1", "ごま油 小さじ1"],
+        steps: ["オーブンを200℃に予熱し、小さめの天板にオーブンシートを敷きます。", "白味噌、水、しょうゆを混ぜ、半量を鮭に塗ります。", "天板に鮭、ブロッコリー、にんじんを並べます。野菜にごま油を回しかけ、残りの味噌だれを鮭にのせます。", "鮭がほぐれやすくなり、野菜がやわらかくなるまで12〜15分焼きます。", "ごはんを2つの器に分け、鮭と野菜をのせます。"],
+        whyItMayHelp: "主な食材を天板ひとつで調理し、温かいごはんと合わせて2人分のボウルにできます。野菜は前もって切っておくこともできます。",
+      },
+    },
+  },
+  {
+    id: "spinach-almond-lemon-pasta",
+    mealType: "lunch",
+    prepMinutes: 20,
+    careContexts: ["familyMeal", "quickPreparation"],
+    featuredIngredients: ["pasta", "vegetables"],
+    accent: "sage",
+    translations: {
+      en: {
+        title: "Spinach & Almond Lemon Pasta",
+        description: "A bright short pasta with wilted spinach, toasted almonds, and a simple lemon finish.",
+        ingredients: ["200 g short pasta", "1/3 cup sliced almonds", "1 tbsp olive oil", "1 garlic clove, finely chopped", "4 cups baby spinach", "1 lemon (finely grated zest and 2 tbsp juice)", "1/2 cup reserved pasta water", "Salt and black pepper, to taste"],
+        steps: ["Toast the sliced almonds in a dry wide pan for 2–3 minutes, then transfer them to a plate.", "Boil the pasta in salted water according to the package directions; reserve 1/2 cup pasta water before draining.", "Warm the olive oil in the wide pan, add the garlic, and cook for 30 seconds. Add the spinach and stir until wilted.", "Add the drained pasta, lemon zest, lemon juice, and enough reserved pasta water to coat the pasta. Season with black pepper and additional salt if needed.", "Fold in half the toasted almonds and scatter the rest over the pasta to serve."],
+        whyItMayHelp: "Keeps the sauce light and uses one pan after the pasta is drained. Spinach wilts quickly, while toasted almonds add texture without another cooking step.",
+      },
+      ja: {
+        title: "ほうれん草とアーモンドのレモンパスタ",
+        titleSegments: ["ほうれん草とアーモンドの", "レモンパスタ"],
+        description: "ほうれん草、炒ったアーモンド、レモンを合わせた、明るい風味のショートパスタです。",
+        ingredients: ["ショートパスタ 200g", "スライスアーモンド 1/3カップ", "オリーブ油 大さじ1", "にんにく 1片（みじん切り）", "ベビーほうれん草 4カップ", "レモン 1個（皮のすりおろしと果汁大さじ2）", "パスタのゆで汁 1/2カップ", "塩、黒こしょう 適量"],
+        steps: ["広めの乾いたフライパンでスライスアーモンドを2〜3分炒り、皿に取り出します。", "塩を加えた湯でパスタを表示どおりにゆで、湯を切る前にゆで汁を1/2カップ取っておきます。", "同じフライパンにオリーブ油を温め、にんにくを30秒ほど炒めます。ほうれん草を加え、しんなりするまで混ぜます。", "パスタ、レモンの皮、レモン果汁、パスタにからむ量のゆで汁を加えます。黒こしょうと、必要なら塩で味を整えます。", "炒ったアーモンドの半量を混ぜ、残りを散らして盛ります。"],
+        whyItMayHelp: "パスタをゆでたあとはフライパンひとつで仕上げられます。ほうれん草は短時間で火が通り、炒ったアーモンドは追加の調理なしで食感を加えられます。",
+      },
+    },
+  },
+  {
+    id: "blueberry-almond-oat-bowl",
+    mealType: "breakfast",
+    prepMinutes: 10,
+    careContexts: ["lowEnergy", "quickPreparation"],
+    featuredIngredients: ["fruit"],
+    accent: "pink",
+    translations: {
+      en: {
+        title: "Blueberry & Almond Oat Bowl",
+        description: "Warm oats topped with blueberries and sliced almonds for a simple everyday breakfast.",
+        ingredients: ["1/2 cup rolled oats", "1 cup milk or oat drink", "1/2 cup blueberries", "2 tbsp sliced almonds", "1/4 tsp ground cinnamon", "1 tsp maple syrup, optional"],
+        steps: ["Combine the rolled oats and milk in a small saucepan and bring to a gentle simmer.", "Cook for about 5 minutes, stirring often, until the oats are soft.", "Stir in half the blueberries and the cinnamon, then cook for 1 minute more.", "Spoon into a bowl and top with the remaining blueberries, sliced almonds, and maple syrup if using."],
+        whyItMayHelp: "Uses one small saucepan and familiar breakfast ingredients. The fruit and almonds are added as simple toppings, so their amounts are easy to adjust.",
+      },
+      ja: {
+        title: "ブルーベリーとアーモンドのオートミールボウル",
+        titleSegments: ["ブルーベリーとアーモンドの", "オートミールボウル"],
+        description: "温かいオートミールにブルーベリーとスライスアーモンドをのせる、毎日の朝食に取り入れやすい一杯です。",
+        ingredients: ["オートミール 1/2カップ", "牛乳またはオーツミルク 1カップ", "ブルーベリー 1/2カップ", "スライスアーモンド 大さじ2", "シナモンパウダー 小さじ1/4", "メープルシロップ 小さじ1（好みで）"],
+        steps: ["小鍋にオートミールと牛乳を入れ、静かに煮立てます。", "時々混ぜながら、オートミールがやわらかくなるまで5分ほど煮ます。", "ブルーベリーの半量とシナモンを混ぜ、さらに1分煮ます。", "器に盛り、残りのブルーベリー、スライスアーモンド、好みでメープルシロップをのせます。"],
+        whyItMayHelp: "小鍋ひとつと身近な朝食材料で作れます。果物とアーモンドはトッピングとして加えるため、食べやすい量へ調整しやすい料理です。",
+      },
+    },
+  },
 ];
 
 interface RecipeEvidenceTags {
@@ -618,6 +693,18 @@ const evidenceTagsByRecipe: Partial<Record<Recipe["id"], RecipeEvidenceTags>> = 
   "creamy-pumpkin-pasta-soup": {
     evidenceIngredients: ["spinach"],
     nutrientTags: ["lutein", "zeaxanthin", "vitaminE"],
+  },
+  "miso-salmon-rice-bowl": {
+    evidenceIngredients: ["salmon"],
+    nutrientTags: ["omega3"],
+  },
+  "spinach-almond-lemon-pasta": {
+    evidenceIngredients: ["spinach", "almonds"],
+    nutrientTags: ["lutein", "zeaxanthin", "vitaminE"],
+  },
+  "blueberry-almond-oat-bowl": {
+    evidenceIngredients: ["blueberries", "almonds"],
+    nutrientTags: ["vitaminE"],
   },
 };
 

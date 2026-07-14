@@ -140,15 +140,15 @@ export const evidenceIngredients: EvidenceIngredientProfile[] = [
   },
   {
     id: "blueberries",
-    nutrientIds: ["lutein", "zeaxanthin"],
+    nutrientIds: [],
     translations: {
       en: {
         name: "Blueberries",
-        whyIncluded: "Blueberries provide a colorful fruit example in the ingredient guide. FoodData Central records carotenoid components including lutein and zeaxanthin; amounts vary by food entry.",
+        whyIncluded: "Blueberries are included as a practical example of adding fruit to an everyday meal. KitchenRx does not label them as a direct source of the four nutrients in this guide.",
       },
       ja: {
         name: "ブルーベリー",
-        whyIncluded: "色のある果物を知る例として掲載しています。FoodData Centralにはルテインやゼアキサンチンを含むカロテノイド成分が記録されていますが、量は食品データごとに異なります。",
+        whyIncluded: "果物を毎日の食事へ取り入れる身近な例として掲載しています。KitchenRxでは、現在扱う4つの栄養素の直接的な供給源とは表示しません。",
       },
     },
     sourceIds: ["usda-fooddata-central"],
