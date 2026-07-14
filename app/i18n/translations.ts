@@ -33,6 +33,19 @@ interface UiCopy {
   };
   principlesLabel: string;
   principles: string[];
+  nutrition: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    chipLabel: string;
+    ingredientHeading: string;
+    whyIngredient: string;
+    sources: string;
+    openSource: (publisher: string) => string;
+    foodInfoTitle: string;
+    disclaimer: string;
+    recipeTagsLabel: string;
+  };
   explorer: {
     eyebrow: string;
     title: string;
@@ -128,6 +141,19 @@ const en: UiCopy = {
   },
   principlesLabel: "KitchenRx principles",
   principles: ["LOCAL SAMPLE RECIPES", "NO ACCOUNT", "NO TRACKING", "CAREFUL LANGUAGE"],
+  nutrition: {
+    eyebrow: "Food & nutrient guide",
+    title: "Explore the ingredients behind the meal.",
+    description: "Choose a nutrient to see a short food-based explanation, connected ingredients, and the public sources used for this prototype.",
+    chipLabel: "Choose a nutrient to explore",
+    ingredientHeading: "Ingredient connections",
+    whyIngredient: "Why this ingredient is included",
+    sources: "Sources",
+    openSource: (publisher) => `Read source from ${publisher}`,
+    foodInfoTitle: "Food information only",
+    disclaimer: "This guide supports food discovery. It is not medical advice, does not promise changes to vision or health, and does not provide supplement instructions.",
+    recipeTagsLabel: "Related food nutrients",
+  },
   explorer: {
     eyebrow: "Recipe explorer",
     title: "Start with what feels possible.",
@@ -240,6 +266,19 @@ const ja: UiCopy = {
   },
   principlesLabel: "KitchenRxの基本方針",
   principles: ["ローカルのサンプルレシピ", "アカウント不要", "追跡なし", "慎重な表現"],
+  nutrition: {
+    eyebrow: "食材と栄養素ガイド",
+    title: "料理の背景にある食材を知る。",
+    description: "栄養素を選ぶと、食品を中心にした短い説明、関連する食材、このプロトタイプで参照した公開資料を確認できます。",
+    chipLabel: "知りたい栄養素を選択",
+    ingredientHeading: "関連する食材",
+    whyIngredient: "なぜこの食材を掲載するのか",
+    sources: "出典",
+    openSource: (publisher) => `${publisher}の出典を開く`,
+    foodInfoTitle: "食生活上の情報です",
+    disclaimer: "このガイドは食材を知るためのもので、医療助言ではありません。視力や健康状態の変化を約束せず、サプリメントの服用方法も案内しません。",
+    recipeTagsLabel: "関連する食品由来の栄養素",
+  },
   explorer: {
     eyebrow: "レシピ検索",
     title: "今できそうなことから。",

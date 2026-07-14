@@ -1,6 +1,12 @@
 "use client";
 
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  evidenceIngredients,
+  getEvidenceSources,
+  getIngredientsForNutrient,
+  nutrients,
+} from "../data/nutrition";
 import { recipes } from "../data/recipes";
 import {
   careContextLabels,
@@ -24,6 +30,7 @@ import {
   type Language,
   type LocalizedRecipe,
   type MealType,
+  type NutrientId,
   type Recipe,
 } from "../types/recipe";
 
@@ -52,11 +59,15 @@ export function KitchenRxApp() {
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
   const [savedOnly, setSavedOnly] = useState(false);
+  const [selectedNutrientId, setSelectedNutrientId] = useState<NutrientId>("lutein");
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
   const [storageReady, setStorageReady] = useState(false);
   const validRecipeIds = useMemo(() => new Set(recipes.map((recipe) => recipe.id)), []);
   const copy = getUiCopy(language);
+  const selectedNutrient = nutrients.find((nutrient) => nutrient.id === selectedNutrientId) ?? nutrients[0];
+  const selectedNutrientContent = selectedNutrient.translations[language] ?? selectedNutrient.translations.en;
+  const selectedIngredients = getIngredientsForNutrient(selectedNutrientId);
 
   useEffect(() => {
     const storedLanguage = window.localStorage.getItem(LANGUAGE_KEY);
@@ -232,6 +243,62 @@ export function KitchenRxApp() {
               <p>{principle}</p>{index < copy.principles.length - 1 && <i aria-hidden="true">✦</i>}
             </span>
           ))}
+        </section>
+
+        <section className="nutrition-guide section-shell" id="nutrition-guide" aria-labelledby="nutrition-title">
+          <div className="section-intro nutrition-intro">
+            <div>
+              <p className="eyebrow"><span /> {copy.nutrition.eyebrow}</p>
+              <h2 id="nutrition-title">{copy.nutrition.title}</h2>
+            </div>
+            <p>{copy.nutrition.description}</p>
+          </div>
+
+          <div className="nutrient-chips" role="group" aria-label={copy.nutrition.chipLabel}>
+            {nutrients.map((nutrient) => {
+              const content = nutrient.translations[language] ?? nutrient.translations.en;
+              return (
+                <button
+                  type="button"
+                  key={nutrient.id}
+                  aria-pressed={selectedNutrientId === nutrient.id}
+                  onClick={() => setSelectedNutrientId(nutrient.id)}
+                >
+                  {content.name}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="nutrition-panel">
+            <div className="nutrient-summary">
+              <p className="nutrition-index">{String(nutrients.indexOf(selectedNutrient) + 1).padStart(2, "0")}</p>
+              <h3>{selectedNutrientContent.name}</h3>
+              <p>{selectedNutrientContent.shortDescription}</p>
+              <SourceLinks sourceIds={selectedNutrient.sourceIds} copy={copy} />
+              <aside className="food-info-note" aria-label={copy.nutrition.foodInfoTitle}>
+                <strong>{copy.nutrition.foodInfoTitle}</strong>
+                <p>{copy.nutrition.disclaimer}</p>
+              </aside>
+            </div>
+
+            <div className="ingredient-connections">
+              <h3>{copy.nutrition.ingredientHeading}</h3>
+              <div className="ingredient-evidence-grid">
+                {selectedIngredients.map((ingredient) => {
+                  const content = ingredient.translations[language] ?? ingredient.translations.en;
+                  return (
+                    <article key={ingredient.id}>
+                      <p className="why-label">{copy.nutrition.whyIngredient}</p>
+                      <h4>{content.name}</h4>
+                      <p>{content.whyIncluded}</p>
+                      <SourceLinks sourceIds={ingredient.sourceIds} copy={copy} />
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </section>
 
         <section className="explorer section-shell" id="recipe-explorer" aria-labelledby="explorer-title">
@@ -456,6 +523,16 @@ function RecipeCard({ recipe, language, copy, index, saved, onSave, onOpen }: Re
         <div className="recipe-time"><span aria-hidden="true">◷</span> {copy.recipe.minutes(recipe.prepMinutes)} <span>·</span> {careContextLabels[language][recipe.careContexts[0]]}</div>
         <h3><SegmentedText text={content.title} segments={content.titleSegments} /></h3>
         <p>{content.description}</p>
+        {recipe.nutrientTags.length > 0 && (
+          <div className="nutrient-tag-row" aria-label={copy.nutrition.recipeTagsLabel}>
+            {recipe.nutrientTags.map((nutrientId) => {
+              const nutrient = nutrients.find((item) => item.id === nutrientId);
+              if (!nutrient) return null;
+              const nutrientContent = nutrient.translations[language] ?? nutrient.translations.en;
+              return <span key={nutrientId}>{nutrientContent.name}</span>;
+            })}
+          </div>
+        )}
         <div className="tag-row" aria-label={copy.recipe.contextsLabel}>
           {recipe.careContexts.slice(0, 2).map((tag) => <span key={tag}>{careContextLabels[language][tag]}</span>)}
         </div>
@@ -481,6 +558,10 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const content: LocalizedRecipe = localizeRecipe(recipe, language);
+  const recipeEvidenceIngredients = recipe.evidenceIngredients.flatMap((ingredientId) => {
+    const ingredient = evidenceIngredients.find((item) => item.id === ingredientId);
+    return ingredient ? [ingredient] : [];
+  });
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -520,12 +601,48 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
             <div><h3>{copy.recipe.preparation}</h3><ol>{content.steps.map((step) => <li key={step}>{step}</li>)}</ol></div>
           </div>
           <div className="why-note"><p className="why-label">{copy.recipe.why}</p><p>{content.whyItMayHelp}</p><small>{copy.recipe.safety}</small></div>
+          {recipeEvidenceIngredients.length > 0 && (
+            <div className="recipe-evidence-note">
+              <p className="why-label">{copy.nutrition.whyIngredient}</p>
+              {recipeEvidenceIngredients.map((ingredient) => {
+                const ingredientContent = ingredient.translations[language] ?? ingredient.translations.en;
+                return (
+                  <div key={ingredient.id}>
+                    <h3>{ingredientContent.name}</h3>
+                    <p>{ingredientContent.whyIncluded}</p>
+                    <SourceLinks sourceIds={ingredient.sourceIds} copy={copy} />
+                  </div>
+                );
+              })}
+              <small>{copy.nutrition.disclaimer}</small>
+            </div>
+          )}
           <div className="dialog-footer">
             <div className="tag-row" aria-label={copy.explorer.ingredient}>{recipe.featuredIngredients.map((tag) => <span key={tag}>{ingredientFilterLabels[language][tag]}</span>)}</div>
             <button className={`button ${saved ? "button-secondary" : "button-primary"}`} type="button" onClick={onSave}>{saved ? copy.recipe.removeFromSaved : copy.recipe.saveForLater}</button>
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SourceLinks({ sourceIds, copy }: { sourceIds: string[]; copy: Copy }) {
+  const sources = getEvidenceSources(sourceIds);
+  return (
+    <div className="source-links" aria-label={copy.nutrition.sources}>
+      <span>{copy.nutrition.sources}</span>
+      {sources.map((source) => (
+        <a
+          key={source.id}
+          href={source.url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={copy.nutrition.openSource(source.publisher)}
+        >
+          {source.publisher} <span aria-hidden="true">↗</span>
+        </a>
+      ))}
     </div>
   );
 }
