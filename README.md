@@ -11,7 +11,7 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 ## Features
 
 - Complete Japanese and English interface switching without a page reload
-- 24 locally stored recipes written for this prototype, with bilingual titles, descriptions, ingredients, steps, and practical notes
+- 27 locally stored recipes written for this prototype, with bilingual titles, descriptions, ingredients, steps, and practical notes
 - Meal type, care context, and ingredient filters
 - Combined filters, result counts, clear-all controls, and an empty state
 - Accessible recipe details with ingredients, preparation steps, and careful practical notes
@@ -94,7 +94,7 @@ Yuriqa Lab explores practical intersections between AI, care systems, hospitalit
 
 ## Project status
 
-KitchenRx is a scoped v1.1 bilingual portfolio prototype with 24 recipes written for this prototype. Its recipe collection remains local and illustrative. It has not undergone clinical validation and is not intended for medical use.
+KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for this prototype. Its recipe collection remains local and illustrative. It has not undergone clinical validation and is not intended for medical use.
 
 ## Future improvements
 

@@ -36,13 +36,22 @@ Phase 1 adds an evidence-aware food and nutrient discovery layer without turning
 - Direct links to named evidence sources
 - Clear food-information and non-medical boundaries
 
+### Phase 2
+
+- Three bilingual, evidence-linked recipes added after the unchanged 24-recipe baseline
+- A salmon rice bowl connected to omega-3 fatty acids
+- A spinach and almond pasta connected to lutein, zeaxanthin, and vitamin E
+- A blueberry and almond oat bowl connected to vitamin E through almonds; blueberries remain an everyday-fruit example rather than a direct source of the four guide nutrients
+- A direct nutrient-to-recipe handoff for the 90-second demo path
+- More visible recipe-card nutrient labels and earlier ingredient-evidence context in recipe details
+- Clearer source, disclaimer, save-to-meal-list, keyboard-focus, and mobile presentation
+
 ### Later Build Week phases
 
 - Expand evidence-linked ingredient coverage
-- Add recipes that make the initial ingredient set more broadly discoverable
 - Improve evidence navigation and source-detail presentation
-- Evaluate a demo-ready guided discovery flow
 - Complete usability, accessibility, privacy, and submission reviews
+- Prepare the hosted demo, demo script, screenshots, and Devpost materials after an explicit deployment review
 
 ## Codex contributions
 
@@ -69,6 +78,37 @@ This log records decisions and results rather than private prompts or conversati
 - Do not provide supplement dosing or supplementation instructions.
 - Preserve privacy: no family medical information, personal information, API keys, or secret data.
 - Use small, reviewable commits and push only after all checks pass.
+- Keep the original 24 recipe records and IDs unchanged while appending three new stable IDs.
+- Do not label blueberries as a direct source of lutein, zeaxanthin, vitamin E, or omega-3 fatty acids in the current guide.
+- Improve the existing interface rather than introducing a new layout system, UI library, or animation layer.
+- Make the judge path visually self-explanatory: choose a nutrient, see matching recipes, inspect ingredient context and public sources, then optionally save the recipe.
+
+## Phase 2 design audit and decisions
+
+The pre-implementation review covered the first screen, nutrient guide, filters and results, recipe cards, recipe dialog, saved recipes and meal list, and 390-pixel mobile presentation.
+
+### Issues found
+
+- Nutrient chips explained ingredients but did not lead directly to matching recipes.
+- Recipe nutrient labels appeared below descriptions and were easy to miss during a short demo.
+- Ingredient rationale and sources appeared after ingredients and preparation in the dialog.
+- Source links and supporting copy were small relative to their importance.
+- Save wording did not explicitly connect the action to the meal list.
+- On mobile, the initial nutrient-to-recipe handoff stopped above the result banner, and two new Japanese dialog titles needed shorter intentional line segments.
+
+### Improvements adopted
+
+- Added a related-recipe count and CTA for each nutrient, with an accessible result banner and exact nutrient filtering.
+- Moved nutrient labels above recipe titles and styled them as a restrained evidence strip.
+- Moved ingredient rationale and sources before recipe instructions in evidence-linked dialogs.
+- Increased supporting text sizes, presented sources as clear link pills, and retained the non-medical disclaimer beside the evidence.
+- Changed save labels and feedback to refer consistently to the meal list.
+- Scrolled and focused the result banner after the nutrient CTA, retained the global visible focus treatment, stacked evidence blocks on mobile, and refined Japanese title-break metadata.
+
+### Improvements deferred
+
+- No brand redesign, navigation restructuring, new screen, UI framework, dependency, or animation system was introduced.
+- Expanded source-detail views, nutrition quantities, serving calculations, personalization, accounts, and deployment remain outside Phase 2.
 
 ## Evidence sources
 
@@ -86,7 +126,11 @@ The Phase 1 model stores source names and URLs alongside the content that uses t
 | `d4ee676` — `docs(build-week): document baseline and challenge scope` | Baseline, scope, roles, decisions, evidence plan, and submission tracking | Complete |
 | `1b0661a` — `feat(build-week): add nutrient and ingredient evidence model` | Typed bilingual nutrient, ingredient, source, and recipe-tag data | Complete |
 | `ed8d57e` — `feat(build-week): add eye-health nutrient discovery UI` | Nutrient controls, card labels, food-context explanations, and source links | Complete |
-| `test(build-week): cover nutrient mapping and filtering` | Data, filter, rendering, privacy, regression, and final verification coverage | Complete in this commit; see Git history for its hash |
+| `3758f63` — `test(build-week): cover nutrient mapping and filtering` | Phase 1 data, filter, rendering, privacy, and regression coverage | Complete |
+| `2474bbc` — `feat(build-week): add evidence-aware eye-health recipes` | Three bilingual recipes and exact food-to-nutrient relationships | Complete |
+| `9371e74` — `style(build-week): polish core KitchenRx user flows` | Nutrient-to-recipe handoff, evidence hierarchy, CTA clarity, typography, focus, and mobile polish | Complete |
+| `c54cf00` — `test(build-week): cover new recipes and demo flow` | 27-recipe integrity, evidence mapping, filtering, rendering, and practical-method coverage | Complete |
+| `docs(build-week): record Phase 2 design and product decisions` | Phase 2 audit, decisions, verification, risks, and submission tracking | Complete in this commit; see Git history for its hash |
 
 ## Test results
 
@@ -108,6 +152,28 @@ Phase 1 verification completed on 2026-07-15.
 
 The existing save state remained readable during manual review, all 24 recipes remained visible, and nutrient selection did not alter the established meal, care-context, ingredient, or saved-recipe filters.
 
+### Phase 2 verification
+
+Phase 2 verification completed on 2026-07-15.
+
+| Check | Result |
+| --- | --- |
+| `npm test` | Passed: production build and 23 automated tests |
+| `npm run build` | Passed: all five vinext build stages completed |
+| `npm run typecheck` | Passed: no TypeScript errors |
+| `npm run lint` | Passed: no ESLint errors or warnings |
+| Recipe and evidence consistency | Passed: the original 24 IDs remain in order, three new stable IDs are appended, all 27 recipes have complete bilingual content, and the blueberry boundary is enforced |
+| Existing filter compatibility | Passed: all 27 recipes remain reachable through meal, care-context, and ingredient filters; nutrient filtering composes with the established filter function |
+| Saved-data compatibility | Passed: `kitchenrx:saved-recipes:v1` is unchanged; a new recipe could be added to and removed from the existing meal list |
+| `git diff --check` | Passed: no whitespace errors |
+| Secrets and personal-information scans | Passed: no credentials, absolute local home-directory paths, email addresses, personal medical details, or private preview URLs found; policy/test phrases were reviewed as intentional non-sensitive matches |
+| Dependency review | Passed: `package.json` and `package-lock.json` are unchanged from the Build Week baseline |
+| Desktop visual review | Passed at 1440 × 900 in Japanese and English; the nutrient CTA, result banner, card evidence strip, dialog evidence block, source links, and save labels displayed without page overflow |
+| Mobile visual review | Passed at 390 × 844 in Japanese and English; nutrient chips remain two columns, the CTA lands on the result banner, cards stack, long Japanese titles use intentional breaks, and the dialog suppresses horizontal scrolling |
+| Keyboard and focus review | Passed: the result banner receives focus, the dialog traps forward and reverse tab movement, Escape closes it, focus returns to the opening control, and the 3-pixel focus outline remains visible |
+
+Phase 2 leaves evidence quantity calculations, richer source-detail views, a hosted demo, and formal assistive-technology testing for later work. It does not infer nutrient amounts or individual health outcomes.
+
 ## Demo URL
 
 No Build Week demo deployment has been created yet. Deployment remains a later, explicitly reviewed step.
@@ -118,6 +184,7 @@ No Build Week demo deployment has been created yet. Deployment remains a later, 
 - Public baseline repository: complete
 - Recoverable baseline tag: complete
 - Phase 1 implementation: complete on `build-week-amd`
+- Phase 2 implementation and design polish: complete on `build-week-amd`
 - Demo deployment: not started
 - Demo video: not started
 - Project description and screenshots: not started
