@@ -25,10 +25,14 @@ test("server-renders the finished KitchenRx shell", async () => {
   assert.match(html, /Recipe explorer/);
   assert.match(html, /Food &amp; nutrient guide/);
   assert.match(html, /Explore the ingredients behind the meal/);
+  assert.match(html, /View related recipes/);
   assert.match(html, /Food information only/);
   assert.match(html, /National Eye Institute/);
   assert.match(html, /https:\/\/www\.nei\.nih\.gov\/eye-health-information/);
   assert.match(html, /Soft Egg &amp; Scallion Rice/);
+  assert.match(html, /Miso Salmon &amp; Vegetable Rice Bowl/);
+  assert.match(html, /Spinach &amp; Almond Lemon Pasta/);
+  assert.match(html, /Blueberry &amp; Almond Oat Bowl/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
