@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync, readdirSync } from "node:fs";
+import { dirname, join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   evidenceIngredients,
   evidenceSources,
@@ -52,6 +55,7 @@ const samples = [
 ];
 
 const noFilters = { mealTypes: [], careContexts: [], ingredients: [] };
+const projectRoot = dirname(dirname(fileURLToPath(import.meta.url)));
 
 test("filtering combines groups and matches selected values broadly within a group", () => {
   const filters = {
@@ -122,6 +126,24 @@ test("all 27 stable recipe records contain complete English and Japanese content
   }
 });
 
+test("all 27 recipe IDs map one-to-one to optimized WebP images", () => {
+  const recipeImageDirectory = join(projectRoot, "public", "images", "recipes");
+  const imageFiles = readdirSync(recipeImageDirectory).filter((file) => file.endsWith(".webp")).sort();
+  const expectedFiles = recipes.map(({ id }) => `${id}.webp`).sort();
+
+  assert.deepEqual(imageFiles, expectedFiles);
+  assert.equal(new Set(imageFiles).size, recipes.length);
+
+  for (const imageFile of imageFiles) {
+    const bytes = readFileSync(join(recipeImageDirectory, imageFile));
+    assert.equal(bytes.subarray(0, 4).toString("ascii"), "RIFF", `${imageFile} is not a RIFF WebP file`);
+    assert.equal(bytes.subarray(8, 12).toString("ascii"), "WEBP", `${imageFile} is not a WebP file`);
+  }
+
+  const heroBytes = readFileSync(join(projectRoot, "public", "images", "hero", "kitchenrx-hero.webp"));
+  assert.equal(heroBytes.subarray(8, 12).toString("ascii"), "WEBP");
+});
+
 test("Japanese display titles expose only intentional line-break opportunities", () => {
   for (const recipe of recipes) {
     const content = recipe.translations.ja;
@@ -163,10 +185,14 @@ test("Japanese interface copy protects short meaning units without changing Engl
   assert.equal(japanese.nutrition.titleSegments.join(""), japanese.nutrition.title);
   assert.deepEqual(japanese.explorer.titleSegments, ["今できそうな", "ことから。"]);
   assert.equal(japanese.explorer.titleSegments.join(""), japanese.explorer.title);
+  assert.equal(japanese.explorer.description, "暮らしに合う条件を複数選べます。同じ項目内では幅広く探し、異なる項目を組み合わせると候補を絞り込めます。");
   assert.deepEqual(japanese.careNotes.titleSegments, ["ケアは、", "調理の前から", "始まる。"]);
   assert.equal(japanese.careNotes.titleSegments.join(""), japanese.careNotes.title);
-  assert.deepEqual(japanese.careNotes.notes[3].titleSegments, ["ホスピタリティの", "余白を残す"]);
+  assert.equal(japanese.careNotes.description, "食の支援には、選択肢を絞って迷いを減らし、いつもの流れを守りながら、一緒に食べる準備を整えることも含まれます。");
+  assert.equal(japanese.careNotes.notes[3].title, "人と食べる時間を守る");
+  assert.deepEqual(japanese.careNotes.notes[3].titleSegments, ["人と食べる時間を", "守る"]);
   assert.equal(japanese.careNotes.notes[3].titleSegments.join(""), japanese.careNotes.notes[3].title);
+  assert.equal(japanese.careNotes.notes[3].text, "デジタルツールは食事の主役にならず、人と食べる時間や日々の選択を静かに支えます。");
 
   assert.equal(english.hero.boardNoteOne, "Use what is already open.");
   assert.equal(english.hero.boardNoteTwo, "Leave fewer decisions for later.");
@@ -175,6 +201,8 @@ test("Japanese interface copy protects short meaning units without changing Engl
   assert.equal(english.mealPlan.title, "A small plan can be enough.");
   assert.equal(english.explorer.title, "Start with what feels possible.");
   assert.equal(english.careNotes.title, "Care often begins before cooking.");
+  assert.equal(japanese.explorer.visualDisclaimer, "レシピ画像は、本プロトタイプ用に作成したイメージ画像です。");
+  assert.equal(english.explorer.visualDisclaimer, "Recipe visuals are illustrative images created for this prototype.");
 });
 
 test("the original 24 IDs remain unchanged and the three Phase 2 IDs are appended in order", () => {

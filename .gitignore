@@ -48,3 +48,6 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# source artwork (kept locally; optimized web assets live in /public)
+/artwork-source/

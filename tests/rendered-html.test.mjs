@@ -35,6 +35,9 @@ test("server-renders the finished KitchenRx shell", async () => {
   assert.match(html, /Miso Salmon &amp; Vegetable Rice Bowl/);
   assert.match(html, /Spinach &amp; Almond Lemon Pasta/);
   assert.match(html, /Blueberry &amp; Almond Oat Bowl/);
+  assert.match(html, /Recipe visuals are illustrative images created for this prototype/);
+  assert.match(html, /\/images\/hero\/kitchenrx-hero\.webp/);
+  assert.match(html, /\/images\/recipes\/tomato-tofu-pasta\.webp/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 

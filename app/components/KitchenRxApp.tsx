@@ -246,11 +246,18 @@ export function KitchenRxApp() {
               <span>{copy.hero.boardHeading}</span>
               <span className="board-date">{copy.hero.boardDate}</span>
             </div>
-            <div className="board-card board-card-main">
-              <p className="board-kicker">{copy.hero.boardKicker}</p>
-              <h2><SegmentedText text={copy.hero.boardRecipe} segments={copy.hero.boardRecipeSegments} /></h2>
-              <div className="board-meta"><span>{copy.hero.boardTime}</span><span>{copy.hero.boardOnePot}</span><span>{copy.hero.boardFlexible}</span></div>
-              <div className="bowl-illustration" aria-hidden="true"><span /><i /><b /></div>
+            <div className="board-card board-card-main board-photo-card">
+              {/* The source is already sized and compressed for this static, browser-focused build. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="hero-image"
+                src="/images/hero/kitchenrx-hero.webp"
+                width="1672"
+                height="941"
+                alt={copy.hero.boardImageAlt}
+                fetchPriority="high"
+                decoding="async"
+              />
             </div>
             <div className="board-grid">
               <div className="board-note"><span>01</span><p><SegmentedText text={copy.hero.boardNoteOne} segments={copy.hero.boardNoteOneSegments} /></p></div>
@@ -338,6 +345,7 @@ export function KitchenRxApp() {
             </div>
             <p>{copy.explorer.description}</p>
           </div>
+          <p className="recipe-visual-disclaimer">{copy.explorer.visualDisclaimer}</p>
 
           <div className="explorer-layout">
             <aside className="filter-panel" aria-label={copy.explorer.filterPanelLabel}>
@@ -553,10 +561,19 @@ function RecipeCard({ recipe, language, copy, index, saved, onSave, onOpen }: Re
   const content = localizeRecipe(recipe, language);
   return (
     <article className="recipe-card">
-      <div className={`recipe-visual accent-${recipe.accent}`}>
+      <div className="recipe-visual">
+        {/* Pre-optimized static WebP keeps card loading predictable on the Worker build. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/images/recipes/${recipe.id}.webp`}
+          width="1200"
+          height="960"
+          alt={content.title}
+          loading="lazy"
+          decoding="async"
+        />
         <span className="recipe-number">{String(index).padStart(2, "0")}</span>
         <span className="recipe-meal-type">{mealTypeLabels[language][recipe.mealType]}</span>
-        <div className="plate-mark" aria-hidden="true"><i /><b /><span /></div>
       </div>
       <div className="recipe-card-body">
         <div className="recipe-time"><span aria-hidden="true">◷</span> {copy.recipe.minutes(recipe.prepMinutes)} <span>·</span> {careContextLabels[language][recipe.careContexts[0]]}</div>
@@ -631,7 +648,12 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
     <div className="dialog-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <div className="recipe-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" aria-describedby="dialog-description" ref={dialogRef}>
         <button className="dialog-close" type="button" onClick={onClose} ref={closeButtonRef} aria-label={copy.recipe.close}>×</button>
-        <div className={`dialog-visual accent-${recipe.accent}`}><span>{mealTypeLabels[language][recipe.mealType]}</span><div className="plate-mark plate-mark-large" aria-hidden="true"><i /><b /><span /></div></div>
+        <div className="dialog-visual">
+          {/* Reuse the pre-optimized card asset without requesting another transformed image. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={`/images/recipes/${recipe.id}.webp`} width="1200" height="960" alt={content.title} decoding="async" />
+          <span>{mealTypeLabels[language][recipe.mealType]}</span>
+        </div>
         <div className="dialog-content">
           <p className="eyebrow"><span /> {copy.recipe.minutes(recipe.prepMinutes)} · {careContextLabels[language][recipe.careContexts[0]]}</p>
           <h2 id="dialog-title"><SegmentedText text={content.title} segments={content.titleSegments} /></h2>

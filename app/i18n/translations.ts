@@ -24,6 +24,7 @@ interface UiCopy {
     credentialText: string;
     credentialTextSegments?: string[];
     boardLabel: string;
+    boardImageAlt: string;
     boardHeading: string;
     boardDate: string;
     boardKicker: string;
@@ -61,6 +62,7 @@ interface UiCopy {
     title: string;
     titleSegments?: string[];
     description: string;
+    visualDisclaimer: string;
     filterPanelLabel: string;
     filterHeading: string;
     clearAll: string;
@@ -147,6 +149,7 @@ const en: UiCopy = {
     credentialTitle: "Grounded in culinary expertise.",
     credentialText: "Recipes and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.",
     boardLabel: "A sample of KitchenRx meal contexts",
+    boardImageAlt: "A salmon grain bowl with spinach, almonds, and blueberries arranged nearby",
     boardHeading: "Today's care shelf",
     boardDate: "04 · SMALL STEPS",
     boardKicker: "LOW-ENERGY LUNCH",
@@ -179,6 +182,7 @@ const en: UiCopy = {
     eyebrow: "Recipe explorer",
     title: "Start with what feels possible.",
     description: "Choose one or more practical contexts. Options within a group are matched broadly; groups work together to narrow the shelf.",
+    visualDisclaimer: "Recipe visuals are illustrative images created for this prototype.",
     filterPanelLabel: "Recipe filters",
     filterHeading: "Filter the shelf",
     clearAll: "Clear all",
@@ -281,6 +285,7 @@ const ja: UiCopy = {
     credentialText: "調理師・製菓衛生師の資格を持つ開発者が、レシピ設計と調理工程を確認しています。",
     credentialTextSegments: ["調理師・製菓衛生師の", "資格を持つ開発者が、", "レシピ設計と調理工程を", "確認しています。"],
     boardLabel: "KitchenRxの食事場面の例",
+    boardImageAlt: "鮭と穀物のボウルのそばに、ほうれん草、アーモンド、ブルーベリーを並べたイメージ",
     boardHeading: "本日のケア棚",
     boardDate: "04 · 小さな一歩",
     boardKicker: "元気がない日の昼食",
@@ -317,7 +322,8 @@ const ja: UiCopy = {
     eyebrow: "レシピ検索",
     title: "今できそうなことから。",
     titleSegments: ["今できそうな", "ことから。"],
-    description: "暮らしに合う条件をひとつ以上選べます。同じ項目内では広めに探し、複数の項目を組み合わせると候補を絞れます。",
+    description: "暮らしに合う条件を複数選べます。同じ項目内では幅広く探し、異なる項目を組み合わせると候補を絞り込めます。",
+    visualDisclaimer: "レシピ画像は、本プロトタイプ用に作成したイメージ画像です。",
     filterPanelLabel: "レシピの絞り込み",
     filterHeading: "条件で絞り込む",
     clearAll: "すべて解除",
@@ -352,12 +358,12 @@ const ja: UiCopy = {
     eyebrow: "ケアの考え方",
     title: "ケアは、調理の前から始まる。",
     titleSegments: ["ケアは、", "調理の前から", "始まる。"],
-    description: "食の支援には、選択肢を小さくし、いつもの流れを守り、一緒に食べる準備をしやすくすることも含まれます。",
+    description: "食の支援には、選択肢を絞って迷いを減らし、いつもの流れを守りながら、一緒に食べる準備を整えることも含まれます。",
     notes: [
       { title: "判断の負担を減らす", text: "理想の献立からではなく、今日の元気と、今ある食材から始めます。" },
       { title: "慣れた流れを守る", text: "繰り返し作れる料理と柔軟な手順は、毎日の食事づくりを少し扱いやすくします。" },
       { title: "食事全体の作業を見る", text: "調理だけでなく、取り分け、配膳、片づけまで含めて、現実的な食事かどうかを考えます。" },
-      { title: "ホスピタリティの余白を残す", titleSegments: ["ホスピタリティの", "余白を残す"], text: "デジタルツールは、人が囲む食卓を奪わず、日々の選択を静かに支えます。" },
+      { title: "人と食べる時間を守る", titleSegments: ["人と食べる時間を", "守る"], text: "デジタルツールは食事の主役にならず、人と食べる時間や日々の選択を静かに支えます。" },
     ],
   },
   about: {
