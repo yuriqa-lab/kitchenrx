@@ -4,6 +4,8 @@ KitchenRx is a bilingual, care-oriented recipe and meal-support prototype by Yur
 
 This is a browser-focused portfolio prototype with no application data backend, not a production medical service.
 
+**Live demo:** [KitchenRx v3](https://kitchenrx-yuriqa-lab.lny-soul-bond.chatgpt.site/)
+
 ## Why it exists
 
 Food preparation is more than a recipe. It also includes deciding what feels possible, coordinating a shared meal, planning for cleanup, and protecting familiar routines. KitchenRx explores how hospitality knowledge and human-centered interface design can make those everyday decisions calmer and more manageable.
@@ -135,13 +137,13 @@ KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for 
 
 ### Japanese overview and trust information
 
-![KitchenRx Japanese desktop overview showing the purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-ja.jpg)
+![KitchenRx Japanese desktop overview showing the new meal-support hero image, purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-ja.jpg)
 
 ### Nutrient discovery and matching recipes
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-nutrient-guide-ja.jpg" alt="KitchenRx Japanese omega-3 food-context guide with public sources, disclaimer, matching-recipe count, and Related recipes button" width="49%">
-  <img src="docs/screenshots/kitchenrx-nutrient-results-ja.jpg" alt="KitchenRx Japanese recipe results filtered to omega-3, showing one matching recipe and its nutrient evidence strip" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-guide-ja.jpg" alt="KitchenRx Japanese food-context guide showing all four nutrient chips, lutein information, public sources, disclaimer, matching-recipe count, and Related recipes button" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-results-ja.jpg" alt="KitchenRx Japanese recipe results filtered to lutein, showing three matching image cards and their nutrient evidence strips" width="49%">
 </p>
 
 ### Evidence-aware recipe detail
@@ -151,7 +153,7 @@ KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for 
 ### Mobile saved recipes and meal list
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-mobile-meal-list-ja.jpg" alt="KitchenRx Japanese mobile layout showing a saved recipe card and the two-recipe meal list without horizontal overflow" width="390">
+  <img src="docs/screenshots/kitchenrx-mobile-meal-list-ja.jpg" alt="KitchenRx Japanese mobile meal-list section showing two saved recipes and the plain-text copy action without horizontal overflow" width="390">
 </p>
 
 ## License
