@@ -135,25 +135,25 @@ KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for 
 
 ## Screenshots
 
-### Japanese overview and trust information
+### English overview and trust information
 
-![KitchenRx Japanese desktop overview showing the new meal-support hero image, purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-ja.jpg)
+![KitchenRx English desktop overview showing the new meal-support hero image, purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-en.jpg)
 
 ### Nutrient discovery and matching recipes
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-nutrient-guide-ja.jpg" alt="KitchenRx Japanese food-context guide showing all four nutrient chips, lutein information, public sources, disclaimer, matching-recipe count, and Related recipes button" width="49%">
-  <img src="docs/screenshots/kitchenrx-nutrient-results-ja.jpg" alt="KitchenRx Japanese recipe results filtered to lutein, showing three matching image cards and their nutrient evidence strips" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-guide-en.jpg" alt="KitchenRx English food-context guide showing all four nutrient chips, lutein information, public sources, disclaimer, matching-recipe count, and View related recipes button" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-results-en.jpg" alt="KitchenRx English recipe results filtered to lutein, showing three matching image cards and their nutrient evidence strips" width="49%">
 </p>
 
 ### Evidence-aware recipe detail
 
-![KitchenRx Japanese salmon recipe detail showing why the ingredient is included, related nutrient sources, disclaimer, ingredients, and preparation steps](docs/screenshots/kitchenrx-salmon-recipe-detail-ja.jpg)
+![KitchenRx English salmon recipe detail showing why the ingredient is included, related nutrient sources, disclaimer, ingredients, and preparation steps](docs/screenshots/kitchenrx-salmon-recipe-detail-en.jpg)
 
 ### Mobile saved recipes and meal list
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-mobile-meal-list-ja.jpg" alt="KitchenRx Japanese mobile meal-list section showing two saved recipes and the plain-text copy action without horizontal overflow" width="390">
+  <img src="docs/screenshots/kitchenrx-mobile-meal-list-en.jpg" alt="KitchenRx English mobile meal-list section showing two saved recipes and the plain-text copy action without horizontal overflow" width="390">
 </p>
 
 ## License
