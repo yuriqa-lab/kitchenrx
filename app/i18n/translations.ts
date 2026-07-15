@@ -29,13 +29,16 @@ interface UiCopy {
     boardOnePot: string;
     boardFlexible: string;
     boardNoteOne: string;
+    boardNoteOneSegments?: string[];
     boardNoteTwo: string;
+    boardNoteTwoSegments?: string[];
   };
   principlesLabel: string;
   principles: string[];
   nutrition: {
     eyebrow: string;
     title: string;
+    titleSegments?: string[];
     description: string;
     chipLabel: string;
     ingredientHeading: string;
@@ -76,6 +79,7 @@ interface UiCopy {
   mealPlan: {
     eyebrow: string;
     title: string;
+    titleSegments?: string[];
     description: string;
     savedCount: (count: number) => string;
     copy: string;
@@ -273,14 +277,17 @@ const ja: UiCopy = {
     boardTime: "18分",
     boardOnePot: "鍋ひとつ",
     boardFlexible: "アレンジ自在",
-    boardNoteOne: "今ある食材から使う。",
-    boardNoteTwo: "あとの判断を少し減らす。",
+    boardNoteOne: "今ある食材を活かす。",
+    boardNoteOneSegments: ["今ある食材を", "活かす。"],
+    boardNoteTwo: "あとで迷う時間を減らす。",
+    boardNoteTwoSegments: ["あとで迷う", "時間を減らす。"],
   },
   principlesLabel: "KitchenRxの基本方針",
   principles: ["ローカルのサンプルレシピ", "アカウント不要", "追跡なし", "慎重な表現"],
   nutrition: {
     eyebrow: "食材と栄養素ガイド",
     title: "料理の背景にある食材を知る。",
+    titleSegments: ["料理の背景にある", "食材を知る。"],
     description: "栄養素を選ぶと、食品を中心にした短い説明、関連する食材、このプロトタイプで参照した公開資料を確認できます。",
     chipLabel: "知りたい栄養素を選択",
     ingredientHeading: "関連する食材",
@@ -320,7 +327,8 @@ const ja: UiCopy = {
   },
   mealPlan: {
     eyebrow: "献立リスト",
-    title: "小さな計画だけでも、十分。",
+    title: "小さな計画でも、十分。",
+    titleSegments: ["小さな計画でも、", "十分。"],
     description: "無理のない候補をいくつか保存し、レシピ名だけのシンプルな一覧としてコピーできます。情報がブラウザの外へ送られることはありません。",
     savedCount: () => "件のレシピを保存",
     copy: "献立リストをコピー",

@@ -141,6 +141,27 @@ test("Japanese display titles expose only intentional line-break opportunities",
   assert.equal(hero.titleSegments.join(""), hero.title);
 });
 
+test("Japanese interface copy protects short meaning units without changing English copy", () => {
+  const japanese = getUiCopy("ja");
+  const english = getUiCopy("en");
+
+  assert.equal(japanese.hero.boardNoteOne, "今ある食材を活かす。");
+  assert.deepEqual(japanese.hero.boardNoteOneSegments, ["今ある食材を", "活かす。"]);
+  assert.equal(japanese.hero.boardNoteOneSegments.join(""), japanese.hero.boardNoteOne);
+  assert.equal(japanese.hero.boardNoteTwo, "あとで迷う時間を減らす。");
+  assert.deepEqual(japanese.hero.boardNoteTwoSegments, ["あとで迷う", "時間を減らす。"]);
+  assert.equal(japanese.hero.boardNoteTwoSegments.join(""), japanese.hero.boardNoteTwo);
+  assert.equal(japanese.mealPlan.title, "小さな計画でも、十分。");
+  assert.deepEqual(japanese.mealPlan.titleSegments, ["小さな計画でも、", "十分。"]);
+  assert.equal(japanese.mealPlan.titleSegments.join(""), japanese.mealPlan.title);
+  assert.deepEqual(japanese.nutrition.titleSegments, ["料理の背景にある", "食材を知る。"]);
+  assert.equal(japanese.nutrition.titleSegments.join(""), japanese.nutrition.title);
+
+  assert.equal(english.hero.boardNoteOne, "Use what is already open.");
+  assert.equal(english.hero.boardNoteTwo, "Leave fewer decisions for later.");
+  assert.equal(english.mealPlan.title, "A small plan can be enough.");
+});
+
 test("the original 24 IDs remain unchanged and the three Phase 2 IDs are appended in order", () => {
   assert.deepEqual(recipes.map(({ id }) => id), [
     "soft-egg-rice",

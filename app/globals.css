@@ -76,6 +76,8 @@ button { color: inherit; }
 
 ::selection { background: var(--pink-light); color: var(--ink); }
 
+.display-phrase { display: inline-block; max-width: 100%; white-space: nowrap; }
+
 .skip-link {
   position: fixed;
   z-index: 200;

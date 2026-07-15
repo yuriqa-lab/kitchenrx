@@ -47,7 +47,7 @@ function SegmentedText({ text, segments }: { text: string; segments?: string[] }
       {segments.map((segment, index) => (
         <Fragment key={`${segment}-${index}`}>
           {index > 0 && <wbr />}
-          {segment}
+          <span className="display-phrase">{segment}</span>
         </Fragment>
       ))}
     </>
@@ -252,8 +252,8 @@ export function KitchenRxApp() {
               <div className="bowl-illustration" aria-hidden="true"><span /><i /><b /></div>
             </div>
             <div className="board-grid">
-              <div className="board-note"><span>01</span><p>{copy.hero.boardNoteOne}</p></div>
-              <div className="board-note board-note-pink"><span>02</span><p>{copy.hero.boardNoteTwo}</p></div>
+              <div className="board-note"><span>01</span><p><SegmentedText text={copy.hero.boardNoteOne} segments={copy.hero.boardNoteOneSegments} /></p></div>
+              <div className="board-note board-note-pink"><span>02</span><p><SegmentedText text={copy.hero.boardNoteTwo} segments={copy.hero.boardNoteTwoSegments} /></p></div>
             </div>
           </div>
         </section>
@@ -270,7 +270,7 @@ export function KitchenRxApp() {
           <div className="section-intro nutrition-intro">
             <div>
               <p className="eyebrow"><span /> {copy.nutrition.eyebrow}</p>
-              <h2 id="nutrition-title">{copy.nutrition.title}</h2>
+              <h2 id="nutrition-title"><SegmentedText text={copy.nutrition.title} segments={copy.nutrition.titleSegments} /></h2>
             </div>
             <p>{copy.nutrition.description}</p>
           </div>
@@ -422,7 +422,7 @@ export function KitchenRxApp() {
           <div className="saved-plan-card">
             <div>
               <p className="eyebrow eyebrow-light"><span /> {copy.mealPlan.eyebrow}</p>
-              <h2 id="saved-title">{copy.mealPlan.title}</h2>
+              <h2 id="saved-title"><SegmentedText text={copy.mealPlan.title} segments={copy.mealPlan.titleSegments} /></h2>
               <p>{copy.mealPlan.description}</p>
             </div>
             <div className="saved-plan-action">
