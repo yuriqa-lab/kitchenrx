@@ -1,6 +1,6 @@
 # KitchenRx
 
-KitchenRx is a care-oriented recipe and meal-support prototype by Yuriqa Lab. It helps people explore realistic meal ideas using practical contexts such as available energy, meal type, preparation effort, and ingredients already on hand.
+KitchenRx is a bilingual, care-oriented recipe and meal-support prototype by Yuriqa Lab. It helps people explore realistic meal ideas using practical contexts such as available energy, meal type, preparation effort, ingredients already on hand, and food-based nutrient context.
 
 This is a browser-focused portfolio prototype with no application data backend, not a production medical service.
 
@@ -10,11 +10,13 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 
 ## Features
 
-- Complete Japanese and English interface switching without a page reload
+- Complete Japanese and English interface and recipe switching without a page reload
 - 27 locally stored recipes written for this prototype, with bilingual titles, descriptions, ingredients, steps, and practical notes
-- Meal type, care context, and ingredient filters
-- Combined filters, result counts, clear-all controls, and an empty state
-- Accessible recipe details with ingredients, preparation steps, and careful practical notes
+- Meal type, care context, ingredient, and saved-recipe filters
+- Four food-context nutrient filters: lutein, zeaxanthin, vitamin E, and omega-3 fatty acids
+- Typed links between highlighted ingredients, related nutrients, recipes, and named public sources
+- Evidence strips on relevant recipe cards and an in-context route from each nutrient to matching recipes
+- Accessible recipe details with ingredient rationale, public-source links, a food-information disclaimer, ingredients, preparation steps, and careful practical notes
 - Save-for-later support stored only in the browser with safe malformed-data handling
 - Language changes preserve active filters, saved recipes, and the open recipe
 - A separately stored language preference, browser-language detection on first visit, and English fallback
@@ -22,6 +24,23 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 - Localized plain-text meal-list copying with success and error feedback
 - Responsive layouts, visible focus states, reduced-motion support, and keyboard-friendly controls
 - Visible privacy and non-medical disclaimers
+
+## 90-second demo path
+
+1. Select one of the four nutrient chips.
+2. Review the food-context explanation, related ingredient, public sources, and matching-recipe count.
+3. Choose **Related recipes / 関連レシピを見る**.
+4. Inspect the nutrient evidence strip on the matching recipe card.
+5. Open the recipe to see why the ingredient is included, then optionally save it to the meal list.
+
+## Evidence and culinary review
+
+KitchenRx keeps two trust signals separate:
+
+- **Nutrition context:** named public sources support the displayed food-and-nutrient relationships. Source names and links are stored alongside the relevant bilingual content.
+- **Culinary review:** recipe design and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.
+
+The culinary credentials are not presented as medical, dietetic, or nutrition-science credentials and are not used as evidence for health outcomes. KitchenRx does not claim to diagnose, treat, prevent, cure, or manage a condition, and it does not claim to improve or restore vision. It provides food and meal-planning information only and does not give supplement instructions.
 
 ## Tech stack
 
@@ -74,6 +93,7 @@ app/
   layout.tsx        Metadata and document shell
   page.tsx          Application entry point
 public/              Social preview asset
+docs/screenshots/    Current README screenshots
 tests/               Logic and rendered-output checks
 worker/              Static application runtime entry
 ```
@@ -92,13 +112,19 @@ Recipe contexts such as “gentle meal,” “high protein,” and “low energy
 
 Yuriqa Lab explores practical intersections between AI, care systems, hospitality, food systems, and human-centered interfaces. KitchenRx is an experiment in translating those themes into a quiet, useful decision-support interface.
 
+## OpenAI Build Week development
+
+The recoverable pre-Build Week release is preserved at tag `build-week-baseline-v1.1`, commit `f7cca4a436b20b05a8e045335f524309ffca5589`. Build Week work continues on `build-week-amd`; it is not merged into `main` in this phase.
+
+Codex accelerated implementation, bilingual data integration, testing, privacy review, screenshot production, and release documentation. GPT-5.6 was used for product-model design, claim-safety reasoning, Japanese and English copy review, interface review, and diff review. Yuriqa retained the product decisions, scope, evidence boundaries, and final review. See [BUILD_WEEK.md](BUILD_WEEK.md) for the public development record and source list.
+
 ## Project status
 
 KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for this prototype. Its recipe collection remains local and illustrative. It has not undergone clinical validation and is not intended for medical use.
 
 ## Future improvements
 
-- Richer original recipe collections
+- Broader recipe collections
 - More flexible ingredient matching
 - Improved meal-plan organization and printable lists
 - Additional languages beyond Japanese and English
@@ -107,21 +133,25 @@ KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for 
 
 ## Screenshots
 
-### Japanese recipe explorer
+### Japanese overview and trust information
 
-![KitchenRx Japanese recipe explorer showing 24 recipes and bilingual filters](docs/screenshots/kitchenrx-overview-ja.jpg)
+![KitchenRx Japanese desktop overview showing the purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-ja.jpg)
 
-### Filtering and recipe details
+### Nutrient discovery and matching recipes
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-filter-en.jpg" alt="KitchenRx English recipe explorer filtered to Snack and Fruit" width="49%">
-  <img src="docs/screenshots/kitchenrx-recipe-detail-ja.jpg" alt="KitchenRx Japanese recipe detail with ingredients, preparation steps, practical context, and non-medical disclaimer" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-guide-ja.jpg" alt="KitchenRx Japanese omega-3 food-context guide with public sources, disclaimer, matching-recipe count, and Related recipes button" width="49%">
+  <img src="docs/screenshots/kitchenrx-nutrient-results-ja.jpg" alt="KitchenRx Japanese recipe results filtered to omega-3, showing one matching recipe and its nutrient evidence strip" width="49%">
 </p>
 
-### Mobile layout
+### Evidence-aware recipe detail
+
+![KitchenRx Japanese salmon recipe detail showing why the ingredient is included, related nutrient sources, disclaimer, ingredients, and preparation steps](docs/screenshots/kitchenrx-salmon-recipe-detail-ja.jpg)
+
+### Mobile saved recipes and meal list
 
 <p align="center">
-  <img src="docs/screenshots/kitchenrx-mobile-ja.jpg" alt="KitchenRx Japanese mobile layout with language switcher and hero content" width="390">
+  <img src="docs/screenshots/kitchenrx-mobile-meal-list-ja.jpg" alt="KitchenRx Japanese mobile layout showing a saved recipe card and the two-recipe meal list without horizontal overflow" width="390">
 </p>
 
 ## License

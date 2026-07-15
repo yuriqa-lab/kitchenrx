@@ -53,6 +53,12 @@ Phase 1 adds an evidence-aware food and nutrient discovery layer without turning
 - Complete usability, accessibility, privacy, and submission reviews
 - Prepare the hosted demo, demo script, screenshots, and Devpost materials after an explicit deployment review
 
+### Phase 3-A
+
+- Refresh the submission-facing README for the current 27-recipe branch
+- Replace the four baseline screenshots with current Japanese overview, nutrient guide, filtered result, evidence-aware recipe detail, and mobile meal-list views
+- Document the 90-second demo path, evidence boundary, culinary-review credentials, and Build Week development record without adding medical or personal information
+
 ## Codex contributions
 
 Codex is responsible for accelerating the Build Week branch setup, evidence-model implementation, bilingual data integration, UI wiring, tests, validation, privacy scans, structured Git history, and release-readiness review. Every generated change remains subject to Yuriqa's product judgment and repository review.
@@ -130,7 +136,11 @@ The Phase 1 model stores source names and URLs alongside the content that uses t
 | `2474bbc` — `feat(build-week): add evidence-aware eye-health recipes` | Three bilingual recipes and exact food-to-nutrient relationships | Complete |
 | `9371e74` — `style(build-week): polish core KitchenRx user flows` | Nutrient-to-recipe handoff, evidence hierarchy, CTA clarity, typography, focus, and mobile polish | Complete |
 | `c54cf00` — `test(build-week): cover new recipes and demo flow` | 27-recipe integrity, evidence mapping, filtering, rendering, and practical-method coverage | Complete |
-| `docs(build-week): record Phase 2 design and product decisions` | Phase 2 audit, decisions, verification, risks, and submission tracking | Complete in this commit; see Git history for its hash |
+| `ec925c3` — `docs(build-week): record Phase 2 design and product decisions` | Phase 2 audit, decisions, verification, risks, and submission tracking | Complete |
+| `2d5dad4` — `fix(build-week): refine Japanese copy and responsive line breaks` | Japanese copy corrections and display-only phrase grouping | Complete |
+| `febce97` — `fix(build-week): refine Japanese copy and responsive line breaks` | Follow-up Japanese contrast and responsive heading corrections | Complete |
+| `308af0b` — `feat(build-week): add culinary credential trust signal` | Accurate bilingual culinary credentials, separated from nutrition evidence and medical claims | Complete |
+| `docs(build-week): refresh screenshots and submission README` | Current 27-recipe screenshots, demo path, trust boundaries, and public submission README | Current Phase 3-A commit |
 
 ## Test results
 
@@ -174,6 +184,25 @@ Phase 2 verification completed on 2026-07-15.
 
 Phase 2 leaves evidence quantity calculations, richer source-detail views, a hosted demo, and formal assistive-technology testing for later work. It does not infer nutrient amounts or individual health outcomes.
 
+### Phase 3-A verification
+
+Phase 3-A verification completed on 2026-07-15.
+
+| Check | Result |
+| --- | --- |
+| `npm test` | Passed: production build and 24 automated tests |
+| `npm run build` | Passed: all five vinext build stages completed |
+| `npm run typecheck` | Passed: no TypeScript errors |
+| `npm run lint` | Passed: no ESLint errors or warnings |
+| README references | Passed: all seven relative links and image references resolve with case-correct repository paths |
+| Screenshot files | Passed: five valid JPEG files, 375–1440 pixels wide, 29–108 KB each, 383,771 bytes total |
+| Desktop and mobile review | Passed: the current Japanese overview, nutrient CTA, filtered result, recipe evidence dialog, and 375 × 812 mobile meal list render without captured browser chrome, local paths, or horizontal overflow |
+| `git diff --check` | Passed: no whitespace errors |
+| Secrets and personal-information scans | Passed: no credentials, absolute local paths, email addresses, private URLs, or personal medical information found; documentation policy phrases and ISO dates were reviewed as intentional matches |
+| Dependency review | Passed: `package.json` and `package-lock.json` are unchanged |
+
+Automated recipe checks confirm that all 27 bilingual recipes remain complete, the original 24 IDs remain unchanged, and the three Build Week IDs remain appended in order.
+
 ## Demo URL
 
 No Build Week demo deployment has been created yet. Deployment remains a later, explicitly reviewed step.
@@ -185,8 +214,9 @@ No Build Week demo deployment has been created yet. Deployment remains a later, 
 - Recoverable baseline tag: complete
 - Phase 1 implementation: complete on `build-week-amd`
 - Phase 2 implementation and design polish: complete on `build-week-amd`
+- Phase 3-A README and screenshot refresh: complete on `build-week-amd`
 - Demo deployment: not started
 - Demo video: not started
-- Project description and screenshots: not started
-- Final privacy and claims review: complete for Phase 1
+- Project description and screenshots: README-ready; Devpost-specific copy and upload remain
+- Final privacy and claims review: complete through Phase 3-A
 - Devpost submission: not submitted
