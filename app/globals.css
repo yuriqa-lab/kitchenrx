@@ -368,8 +368,8 @@ button { color: inherit; }
 .board-grid { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .board-note { min-height: 104px; padding: 17px; display: flex; gap: 20px; background: var(--paper); }
 .board-note-pink { background: var(--pink-light); }
-.board-note span { color: var(--pink); font-family: var(--serif); font-size: 0.82rem; font-style: italic; }
-.board-note p { margin: 0; align-self: end; font-family: var(--serif); font-size: 1rem; line-height: 1.2; }
+.board-note > span { color: var(--pink); font-family: var(--serif); font-size: 0.82rem; font-style: italic; }
+.board-note p { margin: 0; align-self: end; color: var(--ink); font-family: var(--serif); font-size: 1rem; line-height: 1.2; }
 
 .trust-strip {
   min-height: 64px;

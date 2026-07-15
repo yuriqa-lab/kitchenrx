@@ -55,6 +55,7 @@ interface UiCopy {
   explorer: {
     eyebrow: string;
     title: string;
+    titleSegments?: string[];
     description: string;
     filterPanelLabel: string;
     filterHeading: string;
@@ -89,8 +90,9 @@ interface UiCopy {
   careNotes: {
     eyebrow: string;
     title: string;
+    titleSegments?: string[];
     description: string;
-    notes: Array<{ title: string; text: string }>;
+    notes: Array<{ title: string; titleSegments?: string[]; text: string }>;
   };
   about: { eyebrow: string; title: string; text: string; prototypeLabel: string; localFirstLabel: string };
   footer: { description: string; disclaimer: string; meta: string };
@@ -304,6 +306,7 @@ const ja: UiCopy = {
   explorer: {
     eyebrow: "レシピ検索",
     title: "今できそうなことから。",
+    titleSegments: ["今できそうな", "ことから。"],
     description: "暮らしに合う条件をひとつ以上選べます。同じ項目内では広めに探し、複数の項目を組み合わせると候補を絞れます。",
     filterPanelLabel: "レシピの絞り込み",
     filterHeading: "条件で絞り込む",
@@ -338,12 +341,13 @@ const ja: UiCopy = {
   careNotes: {
     eyebrow: "ケアの考え方",
     title: "ケアは、調理の前から始まる。",
+    titleSegments: ["ケアは、", "調理の前から", "始まる。"],
     description: "食の支援には、選択肢を小さくし、いつもの流れを守り、一緒に食べる準備をしやすくすることも含まれます。",
     notes: [
       { title: "判断の負担を減らす", text: "理想の献立からではなく、今日の元気と、今ある食材から始めます。" },
       { title: "慣れた流れを守る", text: "繰り返し作れる料理と柔軟な手順は、毎日の食事づくりを少し扱いやすくします。" },
       { title: "食事全体の作業を見る", text: "調理だけでなく、取り分け、配膳、片づけまで含めて、現実的な食事かどうかを考えます。" },
-      { title: "ホスピタリティの余白を残す", text: "デジタルツールは、人が囲む食卓を奪わず、日々の選択を静かに支えます。" },
+      { title: "ホスピタリティの余白を残す", titleSegments: ["ホスピタリティの", "余白を残す"], text: "デジタルツールは、人が囲む食卓を奪わず、日々の選択を静かに支えます。" },
     ],
   },
   about: {

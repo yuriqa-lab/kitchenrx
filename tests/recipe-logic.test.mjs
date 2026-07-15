@@ -156,10 +156,18 @@ test("Japanese interface copy protects short meaning units without changing Engl
   assert.equal(japanese.mealPlan.titleSegments.join(""), japanese.mealPlan.title);
   assert.deepEqual(japanese.nutrition.titleSegments, ["料理の背景にある", "食材を知る。"]);
   assert.equal(japanese.nutrition.titleSegments.join(""), japanese.nutrition.title);
+  assert.deepEqual(japanese.explorer.titleSegments, ["今できそうな", "ことから。"]);
+  assert.equal(japanese.explorer.titleSegments.join(""), japanese.explorer.title);
+  assert.deepEqual(japanese.careNotes.titleSegments, ["ケアは、", "調理の前から", "始まる。"]);
+  assert.equal(japanese.careNotes.titleSegments.join(""), japanese.careNotes.title);
+  assert.deepEqual(japanese.careNotes.notes[3].titleSegments, ["ホスピタリティの", "余白を残す"]);
+  assert.equal(japanese.careNotes.notes[3].titleSegments.join(""), japanese.careNotes.notes[3].title);
 
   assert.equal(english.hero.boardNoteOne, "Use what is already open.");
   assert.equal(english.hero.boardNoteTwo, "Leave fewer decisions for later.");
   assert.equal(english.mealPlan.title, "A small plan can be enough.");
+  assert.equal(english.explorer.title, "Start with what feels possible.");
+  assert.equal(english.careNotes.title, "Care often begins before cooking.");
 });
 
 test("the original 24 IDs remain unchanged and the three Phase 2 IDs are appended in order", () => {

@@ -333,7 +333,7 @@ export function KitchenRxApp() {
           <div className="section-intro explorer-intro">
             <div>
               <p className="eyebrow"><span /> {copy.explorer.eyebrow}</p>
-              <h2 id="explorer-title">{copy.explorer.title}</h2>
+              <h2 id="explorer-title"><SegmentedText text={copy.explorer.title} segments={copy.explorer.titleSegments} /></h2>
             </div>
             <p>{copy.explorer.description}</p>
           </div>
@@ -437,13 +437,13 @@ export function KitchenRxApp() {
           <div className="section-intro">
             <div>
               <p className="eyebrow"><span /> {copy.careNotes.eyebrow}</p>
-              <h2 id="care-title">{copy.careNotes.title}</h2>
+              <h2 id="care-title"><SegmentedText text={copy.careNotes.title} segments={copy.careNotes.titleSegments} /></h2>
             </div>
             <p>{copy.careNotes.description}</p>
           </div>
           <div className="notes-grid">
             {copy.careNotes.notes.map((note, index) => (
-              <article key={note.title}><span>{String(index + 1).padStart(2, "0")}</span><h3>{note.title}</h3><p>{note.text}</p></article>
+              <article key={note.title}><span>{String(index + 1).padStart(2, "0")}</span><h3><SegmentedText text={note.title} segments={note.titleSegments} /></h3><p>{note.text}</p></article>
             ))}
           </div>
         </section>
