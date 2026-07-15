@@ -22,6 +22,8 @@ test("server-renders the finished KitchenRx shell", async () => {
   assert.match(html, /<title>KitchenRx — Practical meal support<\/title>/i);
   assert.match(html, /Food support for the day you actually have/);
   assert.match(html, /This prototype runs locally in the browser/);
+  assert.match(html, /Grounded in culinary expertise/);
+  assert.match(html, /licensed cook and confectionery hygienist in Japan/);
   assert.match(html, /Recipe explorer/);
   assert.match(html, /Food &amp; nutrient guide/);
   assert.match(html, /Explore the ingredients behind the meal/);
@@ -43,4 +45,5 @@ test("server-rendered copy stays non-medical and privacy-forward", async () => {
   assert.match(html, /does not promise changes to vision or health/i);
   assert.match(html, /does not provide supplement instructions/i);
   assert.doesNotMatch(html, /cures|clinically proven|prescribed for|recommended for patients/i);
+  assert.doesNotMatch(html, /doctor-reviewed|dietitian-reviewed|registered dietitian|medical supervision/i);
 });

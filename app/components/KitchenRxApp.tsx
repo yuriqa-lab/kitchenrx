@@ -238,6 +238,7 @@ export function KitchenRxApp() {
             <div className="hero-notices" aria-label={copy.hero.noticesLabel}>
               <p><strong>{copy.hero.disclaimerTitle}</strong> {copy.hero.disclaimerText}</p>
               <p><strong>{copy.hero.privacyTitle}</strong> {copy.hero.privacyText}</p>
+              <p className="credential-notice"><strong><SegmentedText text={copy.hero.credentialTitle} segments={copy.hero.credentialTitleSegments} /></strong>{" "}<SegmentedText text={copy.hero.credentialText} segments={copy.hero.credentialTextSegments} /></p>
             </div>
           </div>
           <div className="hero-board" aria-label={copy.hero.boardLabel}>

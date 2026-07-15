@@ -305,7 +305,7 @@ button { color: inherit; }
   margin-top: 38px;
   padding-top: 24px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
   border-top: 1px solid var(--line);
 }
@@ -518,7 +518,7 @@ button { color: inherit; }
 .notes-grid { margin-top: 66px; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .notes-grid article { min-height: 280px; padding: 28px 26px; border-right: 1px solid var(--line); }
 .notes-grid article:last-child { border-right: 0; }
-.notes-grid span { color: var(--pink); font-family: var(--serif); font-size: .82rem; font-style: italic; }
+.notes-grid article > span { color: var(--pink); font-family: var(--serif); font-size: .82rem; font-style: italic; }
 .notes-grid h3 { margin: 76px 0 14px; font-family: var(--serif); font-size: 1.4rem; font-weight: 600; line-height: 1.2; }
 .notes-grid p { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.7; }
 
@@ -576,6 +576,8 @@ button { color: inherit; }
 
 @media (max-width: 1080px) {
   .hero { grid-template-columns: 1fr minmax(370px, .75fr); gap: 52px; }
+  .hero-notices { grid-template-columns: 1fr 1fr; }
+  .credential-notice { grid-column: 1 / -1; }
   .recipe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .notes-grid { grid-template-columns: repeat(2, 1fr); }
   .notes-grid article:nth-child(2) { border-right: 0; }
@@ -638,6 +640,7 @@ button { color: inherit; }
   .hero-actions .button { width: 100%; }
   .text-link { justify-content: center; }
   .hero-notices { grid-template-columns: 1fr; }
+  .credential-notice { grid-column: auto; }
   .hero-board { padding: 12px; }
   .board-heading { font-size: .56rem; }
   .board-card-main { min-height: 330px; padding: 26px 22px; }

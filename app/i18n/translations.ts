@@ -19,6 +19,10 @@ interface UiCopy {
     disclaimerText: string;
     privacyTitle: string;
     privacyText: string;
+    credentialTitle: string;
+    credentialTitleSegments?: string[];
+    credentialText: string;
+    credentialTextSegments?: string[];
     boardLabel: string;
     boardHeading: string;
     boardDate: string;
@@ -140,6 +144,8 @@ const en: UiCopy = {
     disclaimerText: "For medical or diet-specific needs, consult a qualified professional.",
     privacyTitle: "Private by design.",
     privacyText: "This prototype runs locally in the browser. It does not collect or send personal data.",
+    credentialTitle: "Grounded in culinary expertise.",
+    credentialText: "Recipes and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.",
     boardLabel: "A sample of KitchenRx meal contexts",
     boardHeading: "Today's care shelf",
     boardDate: "04 · SMALL STEPS",
@@ -270,6 +276,10 @@ const ja: UiCopy = {
     disclaimerText: "医療上または個別の食事制限に関する相談は、資格を持つ専門家へご相談ください。",
     privacyTitle: "プライバシーを前提に。",
     privacyText: "このプロトタイプはブラウザ内で動作し、個人データを収集・送信しません。",
+    credentialTitle: "食の専門性を土台に。",
+    credentialTitleSegments: ["食の専門性を", "土台に。"],
+    credentialText: "調理師・製菓衛生師の資格を持つ開発者が、レシピ設計と調理工程を確認しています。",
+    credentialTextSegments: ["調理師・製菓衛生師の", "資格を持つ開発者が、", "レシピ設計と調理工程を", "確認しています。"],
     boardLabel: "KitchenRxの食事場面の例",
     boardHeading: "本日のケア棚",
     boardDate: "04 · 小さな一歩",

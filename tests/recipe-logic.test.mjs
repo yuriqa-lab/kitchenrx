@@ -151,6 +151,11 @@ test("Japanese interface copy protects short meaning units without changing Engl
   assert.equal(japanese.hero.boardNoteTwo, "あとで迷う時間を減らす。");
   assert.deepEqual(japanese.hero.boardNoteTwoSegments, ["あとで迷う", "時間を減らす。"]);
   assert.equal(japanese.hero.boardNoteTwoSegments.join(""), japanese.hero.boardNoteTwo);
+  assert.equal(japanese.hero.credentialTitle, "食の専門性を土台に。");
+  assert.deepEqual(japanese.hero.credentialTitleSegments, ["食の専門性を", "土台に。"]);
+  assert.equal(japanese.hero.credentialTitleSegments.join(""), japanese.hero.credentialTitle);
+  assert.equal(japanese.hero.credentialText, "調理師・製菓衛生師の資格を持つ開発者が、レシピ設計と調理工程を確認しています。");
+  assert.equal(japanese.hero.credentialTextSegments.join(""), japanese.hero.credentialText);
   assert.equal(japanese.mealPlan.title, "小さな計画でも、十分。");
   assert.deepEqual(japanese.mealPlan.titleSegments, ["小さな計画でも、", "十分。"]);
   assert.equal(japanese.mealPlan.titleSegments.join(""), japanese.mealPlan.title);
@@ -165,6 +170,8 @@ test("Japanese interface copy protects short meaning units without changing Engl
 
   assert.equal(english.hero.boardNoteOne, "Use what is already open.");
   assert.equal(english.hero.boardNoteTwo, "Leave fewer decisions for later.");
+  assert.equal(english.hero.credentialTitle, "Grounded in culinary expertise.");
+  assert.equal(english.hero.credentialText, "Recipes and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.");
   assert.equal(english.mealPlan.title, "A small plan can be enough.");
   assert.equal(english.explorer.title, "Start with what feels possible.");
   assert.equal(english.careNotes.title, "Care often begins before cooking.");
