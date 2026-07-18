@@ -39,11 +39,11 @@ export const nutrients: NutrientProfile[] = [
     translations: {
       en: {
         name: "Lutein",
-        shortDescription: "A carotenoid found in foods such as dark leafy greens. KitchenRx uses it as a food-discovery label, without promising a health outcome.",
+        shortDescription: "Lutein is a carotenoid made by plants and found in foods such as spinach and other dark leafy greens. It is present in the retina and lens, where it may contribute to natural antioxidant and light-filtering functions. KitchenRx connects lutein with recipes that use spinach.",
       },
       ja: {
         name: "ルテイン",
-        shortDescription: "濃い緑色の葉物野菜などに含まれるカロテノイドです。KitchenRxでは、健康上の結果を約束せず、食材を知るための表示として扱います。",
+        shortDescription: "ルテインは植物がつくるカロテノイドで、ほうれん草などの濃い緑色の葉物野菜に含まれます。網膜や水晶体にも存在し、抗酸化や光を吸収する働きがあると考えられています。KitchenRxでは、ほうれん草を使うレシピと結びつけています。",
       },
     },
     sourceIds: ["nei-areds2", "usda-fooddata-central"],
@@ -53,11 +53,11 @@ export const nutrients: NutrientProfile[] = [
     translations: {
       en: {
         name: "Zeaxanthin",
-        shortDescription: "A carotenoid commonly discussed alongside lutein. Food amounts vary, so this guide uses broad ingredient connections rather than dose guidance.",
+        shortDescription: "Zeaxanthin is a plant-made carotenoid found in green leafy vegetables and often discussed alongside lutein. It is present in the retina and lens, where it may contribute to natural antioxidant and light-filtering functions. KitchenRx connects zeaxanthin with recipes that use spinach.",
       },
       ja: {
         name: "ゼアキサンチン",
-        shortDescription: "ルテインとともに取り上げられることの多いカロテノイドです。食品中の量には幅があるため、摂取量の指示ではなく食材との大まかな関係を示します。",
+        shortDescription: "ゼアキサンチンは植物がつくるカロテノイドで、緑色の葉物野菜に含まれ、ルテインとともに取り上げられます。網膜や水晶体にも存在し、抗酸化や光を吸収する働きがあると考えられています。KitchenRxでは、ほうれん草を使うレシピと結びつけています。",
       },
     },
     sourceIds: ["nei-areds2", "usda-fooddata-central"],
@@ -67,11 +67,11 @@ export const nutrients: NutrientProfile[] = [
     translations: {
       en: {
         name: "Vitamin E",
-        shortDescription: "A fat-soluble nutrient found in foods including nuts, seeds, oils, and some green vegetables. This guide describes food sources only.",
+        shortDescription: "Vitamin E is a fat-soluble nutrient found in almonds, seeds, vegetable oils, and some green vegetables. In the body, it acts as an antioxidant that helps protect cells from free-radical damage. KitchenRx connects vitamin E with recipes that use almonds or spinach.",
       },
       ja: {
         name: "ビタミンE",
-        shortDescription: "ナッツ、種子、油、一部の緑色野菜などに含まれる脂溶性の栄養素です。ここでは食品に含まれる栄養情報だけを扱います。",
+        shortDescription: "ビタミンEは、アーモンド、種子、植物油、一部の緑色野菜などに含まれる脂溶性の栄養素です。体内では抗酸化物質として働き、細胞を酸化による損傷から守るのを助けます。KitchenRxでは、アーモンドやほうれん草を使うレシピと結びつけています。",
       },
     },
     sourceIds: ["nih-vitamin-e", "usda-fooddata-central"],
@@ -81,11 +81,11 @@ export const nutrients: NutrientProfile[] = [
     translations: {
       en: {
         name: "Omega-3 fatty acids",
-        shortDescription: "A family of fatty acids that includes ALA, EPA, and DHA. Fatty fish such as salmon can provide EPA and DHA; this is food information, not supplement guidance.",
+        shortDescription: "Omega-3 fatty acids include ALA, EPA, and DHA. Fish such as salmon provide EPA and DHA; omega-3s are important components of the membranes surrounding cells and also provide energy. KitchenRx connects omega-3 fatty acids with recipes that use salmon.",
       },
       ja: {
         name: "オメガ3脂肪酸",
-        shortDescription: "ALA、EPA、DHAなどを含む脂肪酸の総称です。鮭などの脂のある魚はEPAとDHAを含みますが、ここで扱うのは食品情報であり、サプリメントの案内ではありません。",
+        shortDescription: "オメガ3脂肪酸には、ALA、EPA、DHAがあります。鮭などの魚にはEPAとDHAが含まれ、オメガ3脂肪酸は細胞を包む膜の重要な構成要素で、エネルギー源にもなります。KitchenRxでは、鮭を使うレシピと結びつけています。",
       },
     },
     sourceIds: ["nih-omega-3", "usda-fooddata-central"],
@@ -99,14 +99,14 @@ export const evidenceIngredients: EvidenceIngredientProfile[] = [
     translations: {
       en: {
         name: "Spinach",
-        whyIncluded: "Spinach is a practical leafy-green example for exploring the carotenoids lutein and zeaxanthin, and it also contributes vitamin E.",
+        whyIncluded: "Spinach wilts quickly into soups, pasta, and rice dishes. It is KitchenRx's main food connection for lutein and zeaxanthin and also contributes vitamin E.",
       },
       ja: {
         name: "ほうれん草",
-        whyIncluded: "ほうれん草は、ルテインとゼアキサンチンを含む葉物野菜の身近な例で、ビタミンEも含みます。",
+        whyIncluded: "ほうれん草は短時間で火が通り、スープ、パスタ、ごはん料理へ取り入れやすい葉物野菜です。KitchenRxではルテインとゼアキサンチンの主な食材例とし、ビタミンEとのつながりも示します。",
       },
     },
-    sourceIds: ["nih-vitamin-e", "usda-fooddata-central"],
+    sourceIds: ["nei-areds2", "nih-vitamin-e", "usda-fooddata-central"],
   },
   {
     id: "almonds",
@@ -114,11 +114,11 @@ export const evidenceIngredients: EvidenceIngredientProfile[] = [
     translations: {
       en: {
         name: "Almonds",
-        whyIncluded: "Almonds are a familiar food source of vitamin E and can be used in small amounts as a topping when they suit the eater.",
+        whyIncluded: "Almonds add crunch and a toasted flavor to pasta, oats, and other everyday dishes. They are KitchenRx's main food connection for vitamin E.",
       },
       ja: {
         name: "アーモンド",
-        whyIncluded: "アーモンドはビタミンEを含む身近な食品で、食べる人に合う場合は少量をトッピングとして使えます。",
+        whyIncluded: "アーモンドは、パスタやオートミールなどに香ばしさと食感を加えられます。KitchenRxでは、ビタミンEとつながる主な食材として扱います。",
       },
     },
     sourceIds: ["nih-vitamin-e", "usda-fooddata-central"],
@@ -129,29 +129,14 @@ export const evidenceIngredients: EvidenceIngredientProfile[] = [
     translations: {
       en: {
         name: "Salmon",
-        whyIncluded: "Salmon is a commonly available food source of the omega-3 fatty acids EPA and DHA.",
+        whyIncluded: "Salmon works well in oven dishes and rice bowls and brings a rich, savory flavor. It is KitchenRx's food connection for the omega-3 fatty acids EPA and DHA.",
       },
       ja: {
         name: "鮭",
-        whyIncluded: "鮭は、オメガ3脂肪酸のEPAとDHAを含む、手に入りやすい食品のひとつです。",
+        whyIncluded: "鮭はオーブン料理やごはんボウルに使いやすく、うま味と食べ応えを加えられます。KitchenRxでは、オメガ3脂肪酸のEPAとDHAにつながる食材として扱います。",
       },
     },
     sourceIds: ["nih-omega-3", "usda-fooddata-central"],
-  },
-  {
-    id: "blueberries",
-    nutrientIds: [],
-    translations: {
-      en: {
-        name: "Blueberries",
-        whyIncluded: "Blueberries are included as a practical example of adding fruit to an everyday meal. KitchenRx does not label them as a direct source of the four nutrients in this guide.",
-      },
-      ja: {
-        name: "ブルーベリー",
-        whyIncluded: "果物を毎日の食事へ取り入れる身近な例として掲載しています。KitchenRxでは、現在扱う4つの栄養素の直接的な供給源とは表示しません。",
-      },
-    },
-    sourceIds: ["usda-fooddata-central"],
   },
 ];
 

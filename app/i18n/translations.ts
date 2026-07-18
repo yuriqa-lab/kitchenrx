@@ -15,8 +15,8 @@ interface UiCopy {
     explore: string;
     careApproach: string;
     noticesLabel: string;
-    disclaimerTitle: string;
-    disclaimerText: string;
+    sourceTitle: string;
+    sourceText: string;
     privacyTitle: string;
     privacyText: string;
     credentialTitle: string;
@@ -50,12 +50,15 @@ interface UiCopy {
     whyIngredient: string;
     sources: string;
     openSource: (publisher: string) => string;
-    foodInfoTitle: string;
     disclaimer: string;
     recipeTagsLabel: string;
     relatedRecipeCount: (count: number) => string;
     viewRelatedRecipes: string;
     demoHint: string;
+  };
+  ingredientChoiceTip: {
+    title: string;
+    description: string;
   };
   explorer: {
     eyebrow: string;
@@ -101,7 +104,7 @@ interface UiCopy {
     notes: Array<{ title: string; titleSegments?: string[]; text: string }>;
   };
   about: { eyebrow: string; title: string; text: string; prototypeLabel: string; localFirstLabel: string };
-  footer: { description: string; disclaimer: string; meta: string };
+  footer: { description: string; disclaimer: string };
   recipe: {
     minutes: (minutes: number) => string;
     contextsLabel: string;
@@ -112,7 +115,6 @@ interface UiCopy {
     ingredients: string;
     preparation: string;
     why: string;
-    safety: string;
     saveForLater: string;
     removeFromSaved: string;
   };
@@ -138,14 +140,14 @@ const en: UiCopy = {
   hero: {
     eyebrow: "A Yuriqa Lab prototype",
     title: "Food support for the day you actually have.",
-    lede: "KitchenRx helps you explore realistic meals by energy, ingredients, and everyday routines—without turning care into a clinical task.",
+    lede: "KitchenRx helps you explore realistic meals by energy, ingredients, and everyday routines, then save a few options for the days ahead.",
     explore: "Explore food & nutrients",
     careApproach: "Browse all recipes",
-    noticesLabel: "Important information",
-    disclaimerTitle: "Food support, not medical advice.",
-    disclaimerText: "For medical or diet-specific needs, consult a qualified professional.",
+    noticesLabel: "Why you can trust the shelf",
+    sourceTitle: "Named public sources.",
+    sourceText: "Food-and-nutrient connections show the public sources used for this prototype.",
     privacyTitle: "Private by design.",
-    privacyText: "This prototype runs locally in the browser. It does not collect or send personal data.",
+    privacyText: "Saved recipes and language preferences stay in this browser.",
     credentialTitle: "Grounded in culinary expertise.",
     credentialText: "Recipes and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.",
     boardLabel: "A sample of KitchenRx meal contexts",
@@ -160,23 +162,26 @@ const en: UiCopy = {
     boardNoteOne: "Use what is already open.",
     boardNoteTwo: "Leave fewer decisions for later.",
   },
-  principlesLabel: "KitchenRx principles",
-  principles: ["LOCAL SAMPLE RECIPES", "NO ACCOUNT", "NO TRACKING", "CAREFUL LANGUAGE"],
+  principlesLabel: "KitchenRx at a glance",
+  principles: ["BILINGUAL", "27 RECIPES", "SAVED ON DEVICE", "PUBLIC SOURCES"],
   nutrition: {
     eyebrow: "Food & nutrient guide",
     title: "Explore the ingredients behind the meal.",
     description: "Choose a nutrient to see a short food-based explanation, connected ingredients, and the public sources used for this prototype.",
     chipLabel: "Choose a nutrient to explore",
     ingredientHeading: "Ingredient connections",
-    whyIngredient: "Why this ingredient is included",
+    whyIngredient: "How this ingredient works in the dish",
     sources: "Sources",
     openSource: (publisher) => `Read source from ${publisher}`,
-    foodInfoTitle: "Food information only",
-    disclaimer: "This guide supports food discovery. It is not medical advice, does not promise changes to vision or health, and does not provide supplement instructions.",
+    disclaimer: "Reference information for choosing foods and meals. It does not provide treatment or supplement dosing guidance.",
     recipeTagsLabel: "Food nutrient connections",
-    relatedRecipeCount: (count) => `${count} evidence-linked ${count === 1 ? "recipe" : "recipes"}`,
+    relatedRecipeCount: (count) => `${count} ${count === 1 ? "recipe" : "recipes"} with a connected ingredient`,
     viewRelatedRecipes: "View related recipes",
     demoHint: "Next, open a recipe to see why its ingredients are included and review the public sources.",
+  },
+  ingredientChoiceTip: {
+    title: "Ideas for choosing ingredients",
+    description: "Combining dark leafy greens, colorful vegetables, fruit, fish, beans, nuts, and whole grains can bring a wider range of nutrients into everyday meals. When it suits the recipe, olive oil or another plant oil can also be used.",
   },
   explorer: {
     eyebrow: "Recipe explorer",
@@ -200,13 +205,13 @@ const en: UiCopy = {
     emptyResultsText: "Try removing one filter, or return to the full recipe shelf.",
     showAll: "Show all recipes",
     nutrientResultTitle: (nutrient) => `Recipes connected to ${nutrient}`,
-    nutrientResultText: "These recipes contain an ingredient mapped to the selected nutrient in the KitchenRx evidence guide.",
+    nutrientResultText: "These recipes use an ingredient connected to the selected nutrient in the KitchenRx food guide.",
     removeNutrientFilter: "Remove nutrient filter",
   },
   mealPlan: {
     eyebrow: "Your meal list",
     title: "A small plan can be enough.",
-    description: "Save a few realistic options, then copy their titles as a simple list. Nothing leaves this browser.",
+    description: "Save a few realistic options and copy their titles as a simple list. Saved items remain in this browser.",
     savedCount: (count) => `saved ${count === 1 ? "recipe" : "recipes"}`,
     copy: "Copy meal list",
     emptyHint: "Save at least one recipe to copy a list.",
@@ -232,8 +237,7 @@ const en: UiCopy = {
   },
   footer: {
     description: "A care-oriented recipe and meal-support prototype by Yuriqa Lab.",
-    disclaimer: "KitchenRx is a food-support prototype, not medical advice. For medical or diet-specific needs, consult a qualified professional.",
-    meta: "No backend · No login · No data collection",
+    disclaimer: "KitchenRx is a food and meal-planning prototype. For medical or diet-specific needs, consult a qualified professional.",
   },
   recipe: {
     minutes: (minutes) => `${minutes} min`,
@@ -244,8 +248,7 @@ const en: UiCopy = {
     close: "Close recipe details",
     ingredients: "Ingredients",
     preparation: "Preparation",
-    why: "Why this may help",
-    safety: "Practical food-support context only — not medical advice.",
+    why: "Why this recipe is practical",
     saveForLater: "Save to meal list",
     removeFromSaved: "Remove from meal list",
   },
@@ -272,14 +275,14 @@ const ja: UiCopy = {
     eyebrow: "Yuriqa Lab プロトタイプ",
     title: "今日の自分に無理のない、食の支えを。",
     titleSegments: ["今日の自分に", "無理のない、", "食の支えを。"],
-    lede: "KitchenRxは、今日の元気、手元の食材、いつもの暮らしに合わせて、現実的な食事を探すためのツールです。ケアを難しい作業に変えず、できることから選べます。",
+    lede: "KitchenRxは、今日の元気、手元の食材、いつもの暮らしに合わせて、現実的な食事を探すためのツールです。選びやすい候補を見つけ、できることから献立に残せます。",
     explore: "食材と栄養素を見る",
     careApproach: "すべてのレシピを見る",
-    noticesLabel: "大切なお知らせ",
-    disclaimerTitle: "食の支援であり、医療助言ではありません。",
-    disclaimerText: "医療上または個別の食事制限に関する相談は、資格を持つ専門家へご相談ください。",
+    noticesLabel: "信頼につながる情報",
+    sourceTitle: "公的な出典を明記。",
+    sourceText: "食品と栄養素のつながりには、参照した公的資料を表示します。",
     privacyTitle: "プライバシーを前提に。",
-    privacyText: "このプロトタイプはブラウザ内で動作し、個人データを収集・送信しません。",
+    privacyText: "保存したレシピと言語設定は、このブラウザ内に保たれます。",
     credentialTitle: "食の専門性を土台に。",
     credentialTitleSegments: ["食の専門性を", "土台に。"],
     credentialText: "調理師・製菓衛生師の資格を持つ開発者が、レシピ設計と調理工程を確認しています。",
@@ -299,8 +302,8 @@ const ja: UiCopy = {
     boardNoteTwo: "あとで迷う時間を減らす。",
     boardNoteTwoSegments: ["あとで迷う", "時間を減らす。"],
   },
-  principlesLabel: "KitchenRxの基本方針",
-  principles: ["ローカルのサンプルレシピ", "アカウント不要", "追跡なし", "慎重な表現"],
+  principlesLabel: "KitchenRxの特徴",
+  principles: ["日英対応", "27レシピ", "端末内に保存", "公的出典つき"],
   nutrition: {
     eyebrow: "食材と栄養素ガイド",
     title: "料理の背景にある食材を知る。",
@@ -308,15 +311,18 @@ const ja: UiCopy = {
     description: "栄養素を選ぶと、食品を中心にした短い説明、関連する食材、このプロトタイプで参照した公開資料を確認できます。",
     chipLabel: "知りたい栄養素を選択",
     ingredientHeading: "関連する食材",
-    whyIngredient: "なぜこの食材を掲載するのか",
+    whyIngredient: "料理での食材の役割",
     sources: "出典",
     openSource: (publisher) => `${publisher}の出典を開く`,
-    foodInfoTitle: "食生活上の情報です",
-    disclaimer: "このガイドは食材を知るためのもので、医療助言ではありません。視力や健康状態の変化を約束せず、サプリメントの服用方法も案内しません。",
+    disclaimer: "食品と献立を選ぶための参考情報です。治療やサプリメントの用量は案内しません。",
     recipeTagsLabel: "食品と栄養素のつながり",
-    relatedRecipeCount: (count) => `根拠食材を使うレシピ ${count}件`,
+    relatedRecipeCount: (count) => `関連食材を使うレシピ ${count}件`,
     viewRelatedRecipes: "関連レシピを見る",
     demoHint: "次にレシピを開くと、食材を掲載する理由と公的な出典を確認できます。",
+  },
+  ingredientChoiceTip: {
+    title: "食材を選ぶときのヒント",
+    description: "濃い緑色の葉物野菜、色の濃い野菜、果物、魚、豆類、ナッツ、全粒穀物などを組み合わせると、さまざまな栄養素を日々の料理へ取り入れやすくなります。料理に合う場合は、オリーブ油などの植物油も選べます。",
   },
   explorer: {
     eyebrow: "レシピ検索",
@@ -341,14 +347,14 @@ const ja: UiCopy = {
     emptyResultsText: "条件をひとつ外すか、すべてのレシピに戻ってみてください。",
     showAll: "すべてのレシピを見る",
     nutrientResultTitle: (nutrient) => `${nutrient}とつながるレシピ`,
-    nutrientResultText: "選択した栄養素と、KitchenRxの根拠ガイドで対応づけた食材を使うレシピです。",
+    nutrientResultText: "選択した栄養素と、KitchenRxの食材ガイドで結びつけた食材を使うレシピです。",
     removeNutrientFilter: "栄養素の絞り込みを解除",
   },
   mealPlan: {
     eyebrow: "献立リスト",
     title: "小さな計画でも、十分。",
     titleSegments: ["小さな計画でも、", "十分。"],
-    description: "無理のない候補をいくつか保存し、レシピ名だけのシンプルな一覧としてコピーできます。情報がブラウザの外へ送られることはありません。",
+    description: "無理のない候補をいくつか保存し、レシピ名の一覧としてコピーできます。保存した内容は、このブラウザ内に残ります。",
     savedCount: () => "件のレシピを保存",
     copy: "献立リストをコピー",
     emptyHint: "レシピを1件以上保存するとコピーできます。",
@@ -375,8 +381,7 @@ const ja: UiCopy = {
   },
   footer: {
     description: "Yuriqa Labによる、ケアを軸にしたレシピ・食事支援プロトタイプ。",
-    disclaimer: "KitchenRxは食の支援を目的としたプロトタイプであり、医療助言ではありません。医療上または個別の食事制限に関する相談は、資格を持つ専門家へご相談ください。",
-    meta: "バックエンドなし · ログインなし · データ収集なし",
+    disclaimer: "KitchenRxは食材と献立の情報を提供するプロトタイプです。医療上または個別の食事制限については、資格を持つ専門家へご相談ください。",
   },
   recipe: {
     minutes: (minutes) => `${minutes}分`,
@@ -388,7 +393,6 @@ const ja: UiCopy = {
     ingredients: "材料",
     preparation: "作り方",
     why: "このレシピが役立つ場面",
-    safety: "日々の食事を支えるための情報であり、医療助言ではありません。",
     saveForLater: "献立リストに保存",
     removeFromSaved: "献立リストから外す",
   },

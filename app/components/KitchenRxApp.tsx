@@ -236,7 +236,7 @@ export function KitchenRxApp() {
               <a className="text-link" href="#recipe-explorer">{copy.hero.careApproach} <span aria-hidden="true">→</span></a>
             </div>
             <div className="hero-notices" aria-label={copy.hero.noticesLabel}>
-              <p><strong>{copy.hero.disclaimerTitle}</strong> {copy.hero.disclaimerText}</p>
+              <p><strong>{copy.hero.sourceTitle}</strong> {copy.hero.sourceText}</p>
               <p><strong>{copy.hero.privacyTitle}</strong> {copy.hero.privacyText}</p>
               <p className="credential-notice"><strong><SegmentedText text={copy.hero.credentialTitle} segments={copy.hero.credentialTitleSegments} /></strong>{" "}<SegmentedText text={copy.hero.credentialText} segments={copy.hero.credentialTextSegments} /></p>
             </div>
@@ -303,12 +303,10 @@ export function KitchenRxApp() {
             <div className="nutrient-summary">
               <p className="nutrition-index">{String(nutrients.indexOf(selectedNutrient) + 1).padStart(2, "0")}</p>
               <h3>{selectedNutrientContent.name}</h3>
-              <p>{selectedNutrientContent.shortDescription}</p>
+              <div className="nutrient-description">
+                <p>{selectedNutrientContent.shortDescription}</p>
+              </div>
               <SourceLinks sourceIds={selectedNutrient.sourceIds} copy={copy} />
-              <aside className="food-info-note" aria-label={copy.nutrition.foodInfoTitle}>
-                <strong>{copy.nutrition.foodInfoTitle}</strong>
-                <p>{copy.nutrition.disclaimer}</p>
-              </aside>
               <div className="nutrition-action">
                 <p>{copy.nutrition.relatedRecipeCount(selectedNutrientRecipeCount)}</p>
                 <button className="button button-primary" type="button" onClick={showRelatedRecipes}>
@@ -335,7 +333,13 @@ export function KitchenRxApp() {
               </div>
             </div>
           </div>
+          <p className="nutrition-reference-note">{copy.nutrition.disclaimer}</p>
         </section>
+
+        <aside className="ingredient-choice-tip section-shell" aria-labelledby="ingredient-choice-tip-title">
+          <h2 id="ingredient-choice-tip-title">{copy.ingredientChoiceTip.title}</h2>
+          <p>{copy.ingredientChoiceTip.description}</p>
+        </aside>
 
         <section className="explorer section-shell" id="recipe-explorer" aria-labelledby="explorer-title">
           <div className="section-intro explorer-intro">
@@ -473,7 +477,6 @@ export function KitchenRxApp() {
       <footer className="site-footer">
         <div><a className="wordmark footer-wordmark" href="#top" aria-label={copy.homeLabel}><span className="wordmark-mark" aria-hidden="true">K</span><span>KitchenRx</span></a><p>{copy.footer.description}</p></div>
         <p className="footer-disclaimer">{copy.footer.disclaimer}</p>
-        <p className="footer-meta">{copy.footer.meta}</p>
       </footer>
 
       {selectedRecipe && (
@@ -619,6 +622,7 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
     const ingredient = evidenceIngredients.find((item) => item.id === ingredientId);
     return ingredient ? [ingredient] : [];
   });
+  const recipeEvidenceSourceIds = [...new Set(recipeEvidenceIngredients.flatMap((ingredient) => ingredient.sourceIds))];
 
   useEffect(() => {
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -658,27 +662,36 @@ function RecipeDialog({ recipe, language, copy, saved, onSave, onClose }: Recipe
           <p className="eyebrow"><span /> {copy.recipe.minutes(recipe.prepMinutes)} · {careContextLabels[language][recipe.careContexts[0]]}</p>
           <h2 id="dialog-title"><SegmentedText text={content.title} segments={content.titleSegments} /></h2>
           <p className="dialog-description" id="dialog-description">{content.description}</p>
-          {recipeEvidenceIngredients.length > 0 && (
-            <div className="recipe-evidence-note">
-              <p className="why-label">{copy.nutrition.whyIngredient}</p>
-              {recipeEvidenceIngredients.map((ingredient) => {
-                const ingredientContent = ingredient.translations[language] ?? ingredient.translations.en;
-                return (
-                  <div key={ingredient.id}>
-                    <h3>{ingredientContent.name}</h3>
-                    <p>{ingredientContent.whyIncluded}</p>
-                    <SourceLinks sourceIds={ingredient.sourceIds} copy={copy} />
-                  </div>
-                );
-              })}
-              <small>{copy.nutrition.disclaimer}</small>
-            </div>
-          )}
           <div className="dialog-columns">
             <div><h3>{copy.recipe.ingredients}</h3><ul>{content.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}</ul></div>
             <div><h3>{copy.recipe.preparation}</h3><ol>{content.steps.map((step) => <li key={step}>{step}</li>)}</ol></div>
           </div>
-          <div className="why-note"><p className="why-label">{copy.recipe.why}</p><p>{content.whyItMayHelp}</p><small>{copy.recipe.safety}</small></div>
+          <div className="why-note"><p className="why-label">{copy.recipe.why}</p><p>{content.whyItMayHelp}</p></div>
+          {recipeEvidenceIngredients.length > 0 && (
+            <div className="recipe-evidence-note">
+              <p className="why-label">{copy.nutrition.recipeTagsLabel}</p>
+              <div className="recipe-evidence-nutrients" aria-label={copy.nutrition.recipeTagsLabel}>
+                {recipe.nutrientTags.map((nutrientId) => {
+                  const nutrient = nutrients.find((item) => item.id === nutrientId);
+                  if (!nutrient) return null;
+                  const nutrientContent = nutrient.translations[language] ?? nutrient.translations.en;
+                  return <span key={nutrient.id}>{nutrientContent.name}</span>;
+                })}
+              </div>
+              <div className="recipe-evidence-ingredients">
+                {recipeEvidenceIngredients.map((ingredient) => {
+                  const ingredientContent = ingredient.translations[language] ?? ingredient.translations.en;
+                  return (
+                    <article key={ingredient.id}>
+                      <h3>{ingredientContent.name}</h3>
+                      <p>{ingredientContent.whyIncluded}</p>
+                    </article>
+                  );
+                })}
+              </div>
+              <SourceLinks sourceIds={recipeEvidenceSourceIds} copy={copy} />
+            </div>
+          )}
           <div className="dialog-footer">
             <div className="tag-row" aria-label={copy.explorer.ingredient}>{recipe.featuredIngredients.map((tag) => <span key={tag}>{ingredientFilterLabels[language][tag]}</span>)}</div>
             <button className={`button ${saved ? "button-secondary" : "button-primary"}`} type="button" onClick={onSave}>{saved ? copy.recipe.removeFromSaved : copy.recipe.saveForLater}</button>

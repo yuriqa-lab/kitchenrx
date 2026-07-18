@@ -28,7 +28,7 @@ export type IngredientFilter = (typeof ingredientFilters)[number];
 export type Localized<T> = { en: T; ja?: T };
 
 export const nutrientIds = ["lutein", "zeaxanthin", "vitaminE", "omega3"] as const;
-export const evidenceIngredientIds = ["spinach", "almonds", "salmon", "blueberries"] as const;
+export const evidenceIngredientIds = ["spinach", "almonds", "salmon"] as const;
 
 export type NutrientId = (typeof nutrientIds)[number];
 export type EvidenceIngredientId = (typeof evidenceIngredientIds)[number];

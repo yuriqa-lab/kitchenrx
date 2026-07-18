@@ -271,6 +271,39 @@ test("expanded recipe records have consistent structure and use every supported 
   assert.deepEqual([...seenIngredients].sort(), [...ingredientFilters].sort());
 });
 
+test("targeted recipe refinements stay bilingual and cooking-practical", () => {
+  const byId = (id) => recipes.find((recipe) => recipe.id === id);
+  const soup = byId("tofu-rice-soup");
+  const tray = byId("lemon-chicken-tray");
+  const bowl = byId("egg-vegetable-rice-bowl");
+  const salad = byId("sesame-tofu-noodle-salad");
+
+  assert.match(soup.translations.en.ingredients[2], /spinach or komatsuna/);
+  assert.match(soup.translations.ja.ingredients[2], /ほうれん草または小松菜/);
+  assert.match(tray.translations.en.ingredients[3], /broccoli, carrots, and bell peppers/);
+  assert.equal(tray.translations.ja.ingredients[3], "ブロッコリー、にんじん、パプリカなどの野菜 2カップ");
+  assert.match(bowl.translations.en.ingredients[2], /vegetables or mushrooms/);
+  assert.match(bowl.translations.ja.ingredients[2], /野菜やきのこ/);
+  assert.deepEqual(salad.translations.en.ingredients.slice(-6), [
+    "2 tbsp sesame paste or tahini",
+    "1 tbsp soy sauce",
+    "2 tsp rice vinegar",
+    "1 tsp sugar or honey",
+    "2–3 tbsp water",
+    "1 tsp sesame oil, optional",
+  ]);
+  assert.deepEqual(salad.translations.ja.ingredients.slice(-6), [
+    "練りごま 大さじ2",
+    "しょうゆ 大さじ1",
+    "米酢 小さじ2",
+    "砂糖またははちみつ 小さじ1",
+    "水 大さじ2〜3",
+    "ごま油 小さじ1（好みで）",
+  ]);
+  assert.match(salad.translations.en.steps[2], /2 tablespoons of water.*only if the dressing is too thick/);
+  assert.match(salad.translations.ja.steps[2], /水大さじ2.*濃い場合だけ残りの水/);
+});
+
 test("27-recipe filter coverage includes the Phase 2 additions", () => {
   const counts = (values, getValues) => Object.fromEntries(values.map((value) => [value, recipes.filter((recipe) => getValues(recipe).includes(value)).length]));
   assert.deepEqual(counts(mealTypes, (recipe) => [recipe.mealType]), { breakfast: 6, lunch: 8, dinner: 8, snack: 5 });
@@ -306,12 +339,24 @@ test("every one of the 27 recipes remains reachable through its combined filters
   }
 });
 
-test("every listed ingredient in recipes 13–27 is used in the preparation steps in both languages", () => {
+test("every listed ingredient in all 27 recipes is used in the preparation steps in both languages", () => {
   const ingredientKeywords = {
+    "soft-egg-rice": { en: ["rice", "egg", "water", "butter or oil", "scallion", "soy sauce"], ja: ["ごはん", "卵", "水", "バターまたは油", "青ねぎ", "しょうゆ"] },
+    "strawberry-oat-cup": { en: ["oats", "milk", "yogurt", "strawberr", "honey"], ja: ["オートミール", "牛乳", "ヨーグルト", "いちご", "はちみつ"] },
+    "tofu-rice-soup": { en: ["broth", "tofu", "spinach", "komatsuna", "rice", "ginger", "salt or soy sauce"], ja: ["野菜だし", "豆腐", "ほうれん草", "小松菜", "ごはん", "しょうが", "塩またはしょうゆ"] },
+    "lemon-chicken-tray": { en: ["chicken", "rice", "broth", "broccoli", "carrot", "bell pepper", "lemon", "olive oil", "salt", "black pepper"], ja: ["鶏", "米", "スープ", "ブロッコリー", "にんじん", "パプリカ", "レモン", "オリーブ油", "塩", "黒こしょう"] },
+    "tomato-tofu-pasta": { en: ["pasta", "tofu", "passata", "zucchini", "olive oil", "oregano", "cheese"], ja: ["パスタ", "豆腐", "トマトピューレ", "ズッキーニ", "オリーブ油", "オレガノ", "チーズ"] },
+    "egg-vegetable-rice-bowl": { en: ["rice", "egg", "vegetable", "mushroom", "carrot", "spinach", "shimeji", "sesame oil", "soy sauce", "chili crisp"], ja: ["ごはん", "卵", "野菜", "きのこ", "にんじん", "ほうれん草", "しめじ", "ごま油", "しょうゆ", "調味料"] },
+    "chicken-noodle-soup": { en: ["chicken", "broth", "pasta", "vegetable", "bay leaf", "salt", "black pepper"], ja: ["鶏", "スープ", "パスタ", "野菜", "ローリエ", "塩", "黒こしょう"] },
+    "pear-yogurt-bowl": { en: ["pear", "yogurt", "oats", "cinnamon", "nut butter"], ja: ["洋なし", "ヨーグルト", "オーツ", "シナモン", "ナッツバター"] },
+    "tofu-egg-bites": { en: ["egg", "tofu", "vegetable", "oil", "cheese", "black pepper"], ja: ["卵", "豆腐", "野菜", "油", "チーズ", "黒こしょう"] },
+    "one-pan-vegetable-pasta": { en: ["spaghetti", "broth", "vegetable", "olive oil", "lemon", "cheese"], ja: ["スパゲッティ", "野菜だし", "野菜", "オリーブ油", "レモン", "チーズ"] },
+    "ginger-tofu-rice": { en: ["tofu", "rice", "vegetable", "oil", "ginger", "soy sauce", "maple syrup"], ja: ["豆腐", "ごはん", "野菜", "油", "しょうが", "しょうゆ", "メープルシロップ"] },
+    "tomato-egg-drop-soup": { en: ["broth", "tomato", "egg", "spinach", "sesame oil"], ja: ["スープ", "トマト", "卵", "ほうれん草", "ごま油"] },
     "banana-kinako-toast": { en: ["bread", "banana", "yogurt", "kinako", "honey"], ja: ["食パン", "バナナ", "ヨーグルト", "きなこ", "はちみつ"] },
     "pumpkin-egg-rice-porridge": { en: ["rice", "pumpkin", "broth", "egg", "soy sauce"], ja: ["ごはん", "かぼちゃ", "スープ", "卵", "しょうゆ"] },
     "vegetable-frittata-tray": { en: ["egg", "vegetable", "milk", "olive oil", "cheese", "black pepper"], ja: ["卵", "野菜", "牛乳", "オリーブ油", "チーズ", "黒こしょう"] },
-    "sesame-tofu-noodle-salad": { en: ["pasta", "tofu", "cucumber", "carrot", "sesame paste", "soy sauce", "rice vinegar", "water"], ja: ["パスタ", "豆腐", "きゅうり", "にんじん", "練りごま", "しょうゆ", "米酢", "水"] },
+    "sesame-tofu-noodle-salad": { en: ["pasta", "tofu", "cucumber", "carrot", "sesame paste", "soy sauce", "rice vinegar", "sugar or honey", "water", "sesame oil"], ja: ["パスタ", "豆腐", "きゅうり", "にんじん", "練りごま", "しょうゆ", "米酢", "砂糖またははちみつ", "水", "ごま油"] },
     "miso-tofu-soboro-rice": { en: ["tofu", "rice", "carrot", "mushroom", "miso", "soy sauce", "water", "sesame oil"], ja: ["豆腐", "ごはん", "にんじん", "きのこ", "味噌", "しょうゆ", "水", "ごま油"] },
     "chicken-vegetable-rice-balls": { en: ["rice", "chicken", "carrot", "peas", "soy sauce", "sugar", "oil"], ja: ["ごはん", "鶏", "にんじん", "グリーンピース", "しょうゆ", "砂糖", "油"] },
     "chicken-vegetable-pasta-soup": { en: ["chicken", "broth", "pasta", "carrot", "celery", "peas", "thyme"], ja: ["鶏", "スープ", "パスタ", "にんじん", "セロリ", "グリーンピース", "タイム"] },
@@ -377,14 +422,12 @@ test("nutrient and ingredient records are complete, bilingual, and source-backed
     assert.ok(ingredient.translations.en.name.length > 0 && ingredient.translations.ja.name.length > 0);
     assert.ok(ingredient.translations.en.whyIncluded.length > 0);
     assert.ok(ingredient.translations.ja.whyIncluded.length > 0);
-    if (ingredient.id === "blueberries") {
-      assert.deepEqual(ingredient.nutrientIds, [], "blueberries must remain an everyday-fruit example, not a direct source tag");
-    } else {
-      assert.ok(ingredient.nutrientIds.length > 0, `${ingredient.id} needs a nutrient mapping`);
-    }
+    assert.ok(ingredient.nutrientIds.length > 0, `${ingredient.id} needs a nutrient mapping`);
     ingredient.nutrientIds.forEach((nutrientId) => assert.ok(nutrientIds.includes(nutrientId)));
     ingredient.sourceIds.forEach((sourceId) => assert.ok(validSourceIds.has(sourceId), `${ingredient.id} has an unknown source`));
   }
+
+  assert.ok(!evidenceIngredientIds.includes("blueberries"), "blueberries must remain a recipe ingredient, not an evidence-panel ingredient");
 });
 
 test("nutrient selection filters ingredient evidence and recipes without changing established filters", () => {
@@ -433,7 +476,7 @@ test("Phase 2 recipes use the approved evidence relationships and practical meth
   assert.deepEqual(phaseTwo.map(({ evidenceIngredients }) => evidenceIngredients), [
     ["salmon"],
     ["spinach", "almonds"],
-    ["blueberries", "almonds"],
+    ["almonds"],
   ]);
   assert.deepEqual(phaseTwo.map(({ nutrientTags }) => nutrientTags), [
     ["omega3"],
@@ -458,6 +501,12 @@ test("source lookup ignores unknown IDs and claim wording stays within food-info
   const evidenceCopy = JSON.stringify({ nutrients, evidenceIngredients, nutritionUi: [getUiCopy("en").nutrition, getUiCopy("ja").nutrition] });
   assert.doesNotMatch(evidenceCopy, /\b(?:cures?|prevents?|guarantees?|clinically proven|restores? vision)\b/i);
   assert.doesNotMatch(evidenceCopy, /治ります|治すことができます|予防します|視力が回復します/);
-  assert.match(getUiCopy("en").nutrition.disclaimer, /not medical advice/i);
-  assert.match(getUiCopy("ja").nutrition.disclaimer, /医療助言ではありません/);
+  assert.equal(getUiCopy("en").nutrition.disclaimer, "Reference information for choosing foods and meals. It does not provide treatment or supplement dosing guidance.");
+  assert.equal(getUiCopy("ja").nutrition.disclaimer, "食品と献立を選ぶための参考情報です。治療やサプリメントの用量は案内しません。");
+  assert.equal(getUiCopy("en").ingredientChoiceTip.title, "Ideas for choosing ingredients");
+  assert.equal(getUiCopy("ja").ingredientChoiceTip.title, "食材を選ぶときのヒント");
+  assert.equal("foodInfoTitle" in getUiCopy("en").nutrition, false, "the guide note must not have a repeated heading");
+  assert.equal("foodInfoTitle" in getUiCopy("ja").nutrition, false, "the guide note must not have a repeated heading");
+  assert.equal("safety" in getUiCopy("en").recipe, false, "recipe dialogs must not repeat the health boundary");
+  assert.equal("safety" in getUiCopy("ja").recipe, false, "recipe dialogs must not repeat the health boundary");
 });
