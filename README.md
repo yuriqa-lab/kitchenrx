@@ -83,6 +83,10 @@ npm run dev
 
 Open the local address shown in the terminal.
 
+## Included application data
+
+All data required to run the prototype is included in this repository; no separate sample-data download or seed step is required. The 27 bilingual recipes are stored in [`app/data/recipes.ts`](app/data/recipes.ts), while the ingredient, nutrient, and public-source relationships are stored in [`app/data/nutrition.ts`](app/data/nutrition.ts). KitchenRx Match reads only this repository data and runs its matching logic locally in the browser.
+
 ## Production build
 
 ```bash
@@ -143,7 +147,13 @@ Yuriqa Lab explores practical intersections between AI, care systems, hospitalit
 
 The recoverable pre-Build Week release is preserved at tag `build-week-baseline-v1.1`, commit `f7cca4a436b20b05a8e045335f524309ffca5589`. Build Week work continues on `build-week-amd`; it is not merged into `main` in this phase.
 
-Codex accelerated implementation, bilingual data integration, testing, privacy review, screenshot production, and release documentation. GPT-5.6 was used for product-model design, claim-safety reasoning, Japanese and English copy review, interface review, and diff review. Yuriqa retained the product decisions, scope, evidence boundaries, and final review. See [BUILD_WEEK.md](BUILD_WEEK.md) for the public development record and source list.
+KitchenRx was built through iterative collaboration between Yuriqa and Codex:
+
+- **Yuriqa led the product decisions.** She defined the care-oriented scope and evidence boundaries, reviewed the Japanese and English experience on real desktop and mobile screens, and approved each controlled iteration. For KitchenRx Match, she decided that every selected meal, care-context, time, ingredient, and nutrient condition must be combined with **AND** logic. She also decided that a zero-match result must remain honest rather than being padded with recipes that miss a condition.
+- **Codex accelerated implementation and verification.** It helped turn Yuriqa's decisions into the typed bilingual data model, deterministic Match logic, interface changes, automated tests, accessibility and responsive-layout checks, privacy review, screenshot and release documentation, and deployment preparation and verification.
+- **GPT-5.6 supported the reasoning and review work through Codex.** It contributed to product and data-model design, deterministic matching review, food-information claim safety, Japanese and English copy review, interface critique, test planning, and final diff review.
+
+GPT-5.6 and Codex were development tools, not runtime features. The published KitchenRx application does not call a generative AI API: KitchenRx Match uses deterministic local logic over the repository's existing recipe data. See [BUILD_WEEK.md](BUILD_WEEK.md) for the public development record and source list.
 
 ## Project status
 
