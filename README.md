@@ -1,10 +1,10 @@
 # KitchenRx
 
-KitchenRx is a bilingual, care-oriented recipe and meal-support prototype by Yuriqa Lab. It helps people explore realistic meal ideas using practical contexts such as available energy, meal type, preparation effort, ingredients already on hand, and food-based nutrient context.
+KitchenRx is a bilingual, care-oriented web application prototype by Yuriqa Lab. It helps people explore realistic meal ideas using practical contexts such as available energy, meal type, preparation time, ingredients already on hand, and food-based nutrient context.
 
-This is a browser-focused portfolio prototype with no application data backend, not a production medical service.
+**Live demo:** [Open KitchenRx](https://kitchenrx.yuriqa-lab.workers.dev)
 
-**Live demo:** [KitchenRx v3](https://kitchenrx-yuriqa-lab.lny-soul-bond.chatgpt.site/)
+The application is browser-focused and has no application data backend. It provides food and meal-planning information, not medical guidance.
 
 ## Why it exists
 
@@ -12,6 +12,8 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 
 ## Features
 
+- **KitchenRx Match:** a transparent, explainable recipe matcher that applies every selected condition as a required filter
+- Up to three exact Match results in stable recipe order, with only the reasons that actually matched and no unrelated fallback recipes
 - Complete Japanese and English interface and recipe switching without a page reload
 - 27 locally stored recipes written for this prototype, with bilingual titles, descriptions, ingredients, steps, and practical notes
 - Meal type, care context, ingredient, and saved-recipe filters
@@ -27,13 +29,27 @@ Food preparation is more than a recipe. It also includes deciding what feels pos
 - Responsive layouts, visible focus states, reduced-motion support, and keyboard-friendly controls
 - Visible privacy and non-medical disclaimers
 
+## KitchenRx Match
+
+KitchenRx Match is a transparent, explainable matching tool over the existing 27-recipe collection. A person can choose any combination of:
+
+- Meal type
+- Care context
+- Maximum cooking time
+- Ingredient on hand
+- Nutrient of interest
+
+Every selected condition is required, and multiple selections are combined with **AND** logic. Match returns up to three existing recipes that satisfy all selections. It does not fill empty result slots with recipes that miss a condition, and each result shows only factual reasons derived from the selected conditions and recipe data.
+
+The matching is fully deterministic: the same conditions return the same recipes in the same order. It uses no API, generative AI model, or backend.
+
 ## 90-second demo path
 
-1. Select one of the four nutrient chips.
-2. Review the food-context explanation, related ingredient, public sources, and matching-recipe count.
-3. Choose **Related recipes / 関連レシピを見る**.
-4. Inspect the nutrient evidence strip on the matching recipe card.
-5. Open the recipe to see why the ingredient is included, then optionally save it to the meal list.
+1. Choose one or more conditions in **KitchenRx Match**.
+2. Review up to three exact matches and the factual reason shown for each selected condition.
+3. Open a matched recipe to review its ingredients, steps, and food context, then save it to the meal list.
+4. Select one of the four nutrient chips in the food and nutrient guide.
+5. Review the related ingredient, named public sources, and matching recipes.
 
 ## Evidence and culinary review
 
@@ -42,14 +58,14 @@ KitchenRx keeps two trust signals separate:
 - **Nutrition context:** named public sources support the displayed food-and-nutrient relationships. Source names and links are stored alongside the relevant bilingual content.
 - **Culinary review:** recipe design and cooking steps are reviewed by the developer, a licensed cook and confectionery hygienist in Japan.
 
-The culinary credentials are not presented as medical, dietetic, or nutrition-science credentials and are not used as evidence for health outcomes. KitchenRx does not claim to diagnose, treat, prevent, cure, or manage a condition, and it does not claim to improve or restore vision. It provides food and meal-planning information only and does not give supplement instructions.
+The culinary credentials are not presented as medical, dietetic, or nutrition-science credentials and are not used as evidence for health outcomes. KitchenRx provides food and meal-planning information only and does not give supplement instructions.
 
 ## Tech stack
 
 - React 19
 - TypeScript
-- Vite through the lightweight Vinext application runtime
-- Next.js App Router components, built through the lightweight Vinext runtime
+- Next-compatible App Router rendered through the lightweight Vinext and Vite runtime
+- Cloudflare Workers deployment
 - Plain CSS
 - Node.js built-in test runner
 - `localStorage` for device-local saved recipe IDs and the independent language preference
@@ -82,6 +98,15 @@ npm run test:logic
 npm test
 ```
 
+Current `build-week-amd` verification:
+
+- `npm test` — 41/41 passing
+- `npm run test:logic` — 39/39 passing
+- `npm run build` — successful
+- `npm run typecheck` — successful
+- `npm run lint` — successful
+- `git diff --check` — successful
+
 ## Project structure
 
 ```text
@@ -89,12 +114,12 @@ app/
   components/       Interactive application and recipe detail UI
   data/             Stable recipe data with localized content
   i18n/             Japanese and English interface translations
-  lib/              Filtering, localization, persistence parsing, and list formatting logic
+  lib/              Deterministic matching, filtering, localization, persistence, and list formatting logic
   types/            Shared recipe and filter types
   globals.css       Complete visual system and responsive styles
   layout.tsx        Metadata and document shell
   page.tsx          Application entry point
-public/              Social preview asset
+public/              Optimized hero, recipe, and social preview assets
 docs/screenshots/    Current README screenshots
 tests/               Logic and rendered-output checks
 worker/              Static application runtime entry
@@ -102,13 +127,13 @@ worker/              Static application runtime entry
 
 ## Privacy
 
-KitchenRx runs locally in the browser. It does not collect or send personal data, health data, or browsing behavior. Saved recipe IDs remain in the current browser under `kitchenrx:saved-recipes:v1`. The independent language preference is stored under `kitchenrx:language:v1`. Both can be removed by clearing site storage.
+KitchenRx runs in the browser. It does not collect or send personal data, health data, or browsing behavior. Saved recipe IDs remain in the current browser under `kitchenrx:saved-recipes:v1`. The independent language preference is stored under `kitchenrx:language:v1`. Both can be removed by clearing site storage.
 
 ## Non-medical disclaimer
 
 **KitchenRx is a food-support prototype, not medical advice. For medical or diet-specific needs, consult a qualified professional.**
 
-Recipe contexts such as “gentle meal,” “high protein,” and “low energy” describe practical meal-planning situations only. They are not diagnoses, treatments, or health-outcome claims.
+Recipe contexts such as “gentle meal,” “high protein,” and “low energy” describe practical meal-planning situations only. They are not health-outcome claims.
 
 ## Yuriqa Lab connection
 
@@ -122,7 +147,7 @@ Codex accelerated implementation, bilingual data integration, testing, privacy r
 
 ## Project status
 
-KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for this prototype. Its recipe collection remains local and illustrative. It has not undergone clinical validation and is not intended for medical use.
+KitchenRx is a scoped bilingual web application prototype with 27 recipes written for this project. The current Build Week version, including KitchenRx Match, is deployed on Cloudflare Workers. Its recipe collection remains local and illustrative, and the application is not intended for medical use.
 
 ## Future improvements
 
@@ -138,6 +163,10 @@ KitchenRx is a scoped bilingual portfolio prototype with 27 recipes written for 
 ### English overview and trust information
 
 ![KitchenRx English desktop overview showing the new meal-support hero image, purpose, privacy and non-medical notes, and the developer's culinary credentials](docs/screenshots/kitchenrx-hero-en.jpg)
+
+### Transparent and explainable KitchenRx Match
+
+![KitchenRx Match in English showing five required conditions, one exact recipe match, and the factual reason for each matched condition](docs/screenshots/kitchenrx-match-en.jpg)
 
 ### Nutrient discovery and matching recipes
 
