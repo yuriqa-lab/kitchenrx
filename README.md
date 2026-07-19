@@ -145,7 +145,8 @@ Yuriqa Lab explores practical intersections between AI, care systems, hospitalit
 
 ## OpenAI Build Week development
 
-The recoverable pre-Build Week release is preserved at tag `build-week-baseline-v1.1`, commit `f7cca4a436b20b05a8e045335f524309ffca5589`. Build Week work continues on `build-week-amd`; it is not merged into `main` in this phase.
+The recoverable pre-Build Week release is preserved at tag build-week-baseline-v1.1, commit f7cca4a436b20b05a8e045335f524309ffca5589. 
+The current Build Week release lives on build-week-amd, which is now the repository's default branch. The earlier main branch remains unmodified as a preserved reference point.
 
 KitchenRx was built through iterative collaboration between Yuriqa and Codex:
 
