@@ -29,9 +29,11 @@ export type Localized<T> = { en: T; ja?: T };
 
 export const nutrientIds = ["lutein", "zeaxanthin", "vitaminE", "omega3"] as const;
 export const evidenceIngredientIds = ["spinach", "almonds", "salmon"] as const;
+export const matchTimeBudgets = ["15", "30", "45"] as const;
 
 export type NutrientId = (typeof nutrientIds)[number];
 export type EvidenceIngredientId = (typeof evidenceIngredientIds)[number];
+export type MatchTimeBudget = (typeof matchTimeBudgets)[number];
 
 export interface RecipeContent {
   title: string;
@@ -90,4 +92,25 @@ export interface FilterState {
   mealTypes: MealType[];
   careContexts: CareContext[];
   ingredients: IngredientFilter[];
+}
+
+export interface MatchCriteria {
+  mealType: MealType | null;
+  careContext: CareContext | null;
+  timeBudget: MatchTimeBudget | null;
+  ingredient: IngredientFilter | null;
+  nutrientId: NutrientId | null;
+}
+
+export type MatchReason =
+  | { kind: "mealType"; value: MealType }
+  | { kind: "careContext"; value: CareContext }
+  | { kind: "prepTime"; minutes: number }
+  | { kind: "ingredient"; value: IngredientFilter }
+  | { kind: "nutrient"; value: NutrientId };
+
+export interface RecipeMatch {
+  recipe: Recipe;
+  score: number;
+  reasons: MatchReason[];
 }

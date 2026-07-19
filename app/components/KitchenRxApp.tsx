@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   evidenceIngredients,
   getEvidenceSources,
@@ -19,19 +19,25 @@ import {
   localizeRecipe,
   resolveInitialLanguage,
 } from "../lib/localization";
+import { countMatchCriteria, emptyMatchCriteria, findRecipeMatches } from "../lib/recipeMatch";
 import { filterRecipes, formatMealList, parseSavedRecipeIds, SAVED_RECIPES_KEY } from "../lib/recipeLogic";
 import {
   careContexts,
   ingredientFilters,
+  matchTimeBudgets,
   mealTypes,
   type CareContext,
   type FilterState,
   type IngredientFilter,
   type Language,
   type LocalizedRecipe,
+  type MatchCriteria,
+  type MatchReason,
+  type MatchTimeBudget,
   type MealType,
   type NutrientId,
   type Recipe,
+  type RecipeMatch,
 } from "../types/recipe";
 
 const emptyFilters: FilterState = { mealTypes: [], careContexts: [], ingredients: [] };
@@ -61,6 +67,7 @@ export function KitchenRxApp() {
   const [savedOnly, setSavedOnly] = useState(false);
   const [selectedNutrientId, setSelectedNutrientId] = useState<NutrientId>("lutein");
   const [recipeNutrientFilter, setRecipeNutrientFilter] = useState<NutrientId | null>(null);
+  const [matchCriteria, setMatchCriteria] = useState<MatchCriteria>(emptyMatchCriteria);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [toast, setToast] = useState<ToastState>(null);
   const [storageReady, setStorageReady] = useState(false);
@@ -113,6 +120,7 @@ export function KitchenRxApp() {
     () => filterRecipes(recipes, filters, savedOnly, savedIds, recipeNutrientFilter),
     [filters, savedOnly, savedIds, recipeNutrientFilter],
   );
+  const recipeMatches = useMemo(() => findRecipeMatches(recipes, matchCriteria), [matchCriteria]);
 
   const activeFilterCount = filters.mealTypes.length + filters.careContexts.length + filters.ingredients.length + (recipeNutrientFilter ? 1 : 0);
   const savedRecipes = recipes.filter((recipe) => savedIds.has(recipe.id));
@@ -273,6 +281,17 @@ export function KitchenRxApp() {
             </span>
           ))}
         </section>
+
+        <MatchSection
+          criteria={matchCriteria}
+          matches={recipeMatches}
+          language={language}
+          copy={copy}
+          savedIds={savedIds}
+          onCriteriaChange={setMatchCriteria}
+          onOpen={setSelectedRecipe}
+          onSave={toggleSaved}
+        />
 
         <section className="nutrition-guide section-shell" id="nutrition-guide" aria-labelledby="nutrition-title">
           <div className="section-intro nutrition-intro">
@@ -493,6 +512,192 @@ export function KitchenRxApp() {
       {toast && <div className={`toast toast-${toast.tone}`} role={toast.tone === "error" ? "alert" : "status"}>{toast.message}</div>}
     </>
   );
+}
+
+interface MatchSectionProps {
+  criteria: MatchCriteria;
+  matches: RecipeMatch[];
+  language: Language;
+  copy: Copy;
+  savedIds: Set<string>;
+  onCriteriaChange: (criteria: MatchCriteria) => void;
+  onOpen: (recipe: Recipe) => void;
+  onSave: (recipe: Recipe) => void;
+}
+
+function MatchSection({ criteria, matches, language, copy, savedIds, onCriteriaChange, onOpen, onSave }: MatchSectionProps) {
+  const selectedCount = countMatchCriteria(criteria);
+
+  function updateCriterion<Key extends keyof MatchCriteria>(key: Key, value: MatchCriteria[Key]) {
+    onCriteriaChange({ ...criteria, [key]: value });
+  }
+
+  return (
+    <section className="match-section section-shell" id="kitchenrx-match" aria-labelledby="match-title">
+      <div className="match-shell">
+        <div className="match-intro">
+          <p className="eyebrow"><span /> {copy.match.eyebrow}</p>
+          <h2 id="match-title"><SegmentedText text={copy.match.title} segments={copy.match.titleSegments} /></h2>
+          <p>{copy.match.description}</p>
+        </div>
+
+        <div className="match-form" role="group" aria-label={copy.match.formLabel}>
+          <MatchSelect
+            id="match-meal-type"
+            label={copy.match.mealType}
+            noPreference={copy.match.noPreference}
+            value={criteria.mealType ?? ""}
+            onChange={(value) => updateCriterion("mealType", value ? value as MealType : null)}
+          >
+            {mealTypes.map((value) => <option key={value} value={value}>{mealTypeLabels[language][value]}</option>)}
+          </MatchSelect>
+          <MatchSelect
+            id="match-care-context"
+            label={copy.match.careContext}
+            noPreference={copy.match.noPreference}
+            value={criteria.careContext ?? ""}
+            onChange={(value) => updateCriterion("careContext", value ? value as CareContext : null)}
+          >
+            {careContexts.map((value) => <option key={value} value={value}>{careContextLabels[language][value]}</option>)}
+          </MatchSelect>
+          <MatchSelect
+            id="match-time-budget"
+            label={copy.match.timeBudget}
+            noPreference={copy.match.noPreference}
+            value={criteria.timeBudget ?? ""}
+            onChange={(value) => updateCriterion("timeBudget", value ? value as MatchTimeBudget : null)}
+          >
+            {matchTimeBudgets.map((value) => <option key={value} value={value}>{copy.match.timeLabels[value]}</option>)}
+          </MatchSelect>
+          <MatchSelect
+            id="match-ingredient"
+            label={copy.match.ingredient}
+            noPreference={copy.match.noPreference}
+            value={criteria.ingredient ?? ""}
+            onChange={(value) => updateCriterion("ingredient", value ? value as IngredientFilter : null)}
+          >
+            {ingredientFilters.map((value) => <option key={value} value={value}>{ingredientFilterLabels[language][value]}</option>)}
+          </MatchSelect>
+          <MatchSelect
+            id="match-nutrient"
+            label={copy.match.nutrient}
+            noPreference={copy.match.noPreference}
+            value={criteria.nutrientId ?? ""}
+            onChange={(value) => updateCriterion("nutrientId", value ? value as NutrientId : null)}
+          >
+            {nutrients.map((nutrient) => {
+              const content = nutrient.translations[language] ?? nutrient.translations.en;
+              return <option key={nutrient.id} value={nutrient.id}>{content.name}</option>;
+            })}
+          </MatchSelect>
+        </div>
+
+        <div className="match-status">
+          <p aria-live="polite">{selectedCount > 0 ? copy.match.selectedCount(selectedCount) : copy.match.promptText}</p>
+          {selectedCount > 0 && <button type="button" onClick={() => onCriteriaChange(emptyMatchCriteria)}>{copy.match.clear}</button>}
+        </div>
+
+        {selectedCount === 0 ? (
+          <div className="match-prompt" role="status">
+            <span aria-hidden="true">✦</span>
+            <div><h3>{copy.match.promptTitle}</h3><p>{copy.match.promptText}</p></div>
+          </div>
+        ) : matches.length > 0 ? (
+          <div className="match-results" id="match-results" aria-live="polite">
+            <div className="match-results-heading">
+              <h3>{copy.match.resultsTitle}</h3>
+              <p>{copy.match.resultsSummary(matches.length)}</p>
+            </div>
+            <div className="match-grid">
+              {matches.map((match) => (
+                <MatchResultCard
+                  key={match.recipe.id}
+                  match={match}
+                  language={language}
+                  copy={copy}
+                  saved={savedIds.has(match.recipe.id)}
+                  onOpen={() => onOpen(match.recipe)}
+                  onSave={() => onSave(match.recipe)}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="match-prompt" role="status">
+            <span aria-hidden="true">○</span>
+            <div><h3>{copy.match.emptyTitle}</h3><p>{copy.match.emptyText}</p></div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+interface MatchSelectProps {
+  id: string;
+  label: string;
+  noPreference: string;
+  value: string;
+  onChange: (value: string) => void;
+  children: ReactNode;
+}
+
+function MatchSelect({ id, label, noPreference, value, onChange, children }: MatchSelectProps) {
+  return (
+    <label className="match-field" htmlFor={id}>
+      <span>{label}</span>
+      <select id={id} value={value} onChange={(event) => onChange(event.target.value)}>
+        <option value="">{noPreference}</option>
+        {children}
+      </select>
+    </label>
+  );
+}
+
+interface MatchResultCardProps {
+  match: RecipeMatch;
+  language: Language;
+  copy: Copy;
+  saved: boolean;
+  onOpen: () => void;
+  onSave: () => void;
+}
+
+function MatchResultCard({ match, language, copy, saved, onOpen, onSave }: MatchResultCardProps) {
+  const content = localizeRecipe(match.recipe, language);
+  return (
+    <article className="match-card">
+      <div className="match-card-image">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={`/images/recipes/${match.recipe.id}.webp`} width="1200" height="960" alt={content.title} loading="lazy" decoding="async" />
+      </div>
+      <div className="match-card-body">
+        <p className="match-score"><span aria-hidden="true">✦</span> {copy.match.matchScore(match.score)}</p>
+        <h4><SegmentedText text={content.title} segments={content.titleSegments} /></h4>
+        <ul className="match-reasons">
+          {match.reasons.map((reason, index) => <li key={`${reason.kind}-${index}`}>{formatMatchReason(reason, language, copy)}</li>)}
+        </ul>
+        <div className="match-card-actions">
+          <button className="recipe-open" type="button" onClick={onOpen}>{copy.recipe.view} <span aria-hidden="true">→</span></button>
+          <button className={`save-button${saved ? " is-saved" : ""}`} type="button" onClick={onSave} aria-pressed={saved} aria-label={saved ? copy.recipe.removeLabel(content.title) : copy.recipe.saveLabel(content.title)}><span aria-hidden="true">{saved ? "♥" : "♡"}</span></button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function formatMatchReason(reason: MatchReason, language: Language, copy: Copy): string {
+  switch (reason.kind) {
+    case "mealType": return copy.match.reasonMealType(mealTypeLabels[language][reason.value]);
+    case "careContext": return copy.match.reasonCareContext(careContextLabels[language][reason.value]);
+    case "prepTime": return copy.match.reasonPrepTime(reason.minutes);
+    case "ingredient": return copy.match.reasonIngredient(ingredientFilterLabels[language][reason.value]);
+    case "nutrient": {
+      const nutrient = nutrients.find((item) => item.id === reason.value);
+      const content = nutrient?.translations[language] ?? nutrient?.translations.en;
+      return copy.match.reasonNutrient(content?.name ?? reason.value);
+    }
+  }
 }
 
 async function copyText(value: string): Promise<void> {

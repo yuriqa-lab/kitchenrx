@@ -21,7 +21,7 @@
 
 html { scroll-behavior: smooth; }
 
-#nutrition-guide, #recipe-explorer, #care-notes, #about { scroll-margin-top: 96px; }
+#kitchenrx-match, #nutrition-guide, #recipe-explorer, #care-notes, #about { scroll-margin-top: 96px; }
 
 body {
   margin: 0;
@@ -38,6 +38,7 @@ html[lang="ja"] body {
 }
 
 html[lang="ja"] .hero h1,
+html[lang="ja"] .match-intro h2,
 html[lang="ja"] .section-intro h2,
 html[lang="ja"] .saved-plan h2,
 html[lang="ja"] .about-card h2,
@@ -61,7 +62,7 @@ html[lang="ja"] .dialog-content h2 {
 
 body.dialog-open { overflow: hidden; }
 
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 
 button, a { -webkit-tap-highlight-color: transparent; }
 
@@ -393,6 +394,41 @@ button { color: inherit; }
 
 .section-shell { width: min(1280px, calc(100% - 48px)); margin: 0 auto; }
 
+.match-section { padding-top: 72px; }
+.match-shell { padding: clamp(28px, 4vw, 52px); border: 1px solid #d3cdbf; background: var(--paper); box-shadow: 0 10px 34px rgba(47, 48, 42, .035); }
+.match-intro { display: grid; grid-template-columns: minmax(280px, .82fr) minmax(300px, 1fr); align-items: end; gap: clamp(30px, 5vw, 72px); }
+.match-intro h2 { max-width: 620px; margin: 0; font-family: var(--serif); font-size: clamp(2.35rem, 4vw, 4.25rem); font-weight: 500; letter-spacing: -.045em; line-height: 1; }
+.match-intro > p { max-width: 610px; margin: 0 0 3px; color: var(--muted); font-size: .88rem; line-height: 1.72; }
+.match-form { margin-top: 34px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.match-field { min-width: 0; display: grid; gap: 7px; color: #555953; font-size: .68rem; font-weight: 760; letter-spacing: .04em; }
+.match-field select { width: 100%; min-height: 46px; padding: 9px 34px 9px 11px; border: 1px solid #c7c0b2; border-radius: 0; background: var(--paper-strong); color: var(--ink); cursor: pointer; font-size: .78rem; font-weight: 600; letter-spacing: 0; }
+.match-field select:hover { border-color: var(--green); }
+.match-status { min-height: 42px; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line); }
+.match-status p { margin: 0; color: #6a6d66; font-size: .7rem; }
+.match-status button { min-height: 36px; padding: 5px 0; border: 0; background: transparent; color: #8c4d4b; cursor: pointer; font-size: .7rem; font-weight: 720; text-decoration: underline; text-underline-offset: 3px; }
+.match-prompt { min-height: 92px; padding: 20px 2px 0; display: flex; align-items: center; gap: 16px; }
+.match-prompt > span { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid var(--pink); border-radius: 50%; color: var(--pink); }
+.match-prompt h3 { margin: 0; font-family: var(--serif); font-size: 1.16rem; font-weight: 620; }
+.match-prompt p { margin: 3px 0 0; color: var(--muted); font-size: .74rem; }
+.match-results { padding-top: 25px; }
+.match-results-heading { margin-bottom: 15px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; }
+.match-results-heading h3 { margin: 0; font-family: var(--serif); font-size: 1.45rem; font-weight: 600; }
+.match-results-heading p { margin: 0; color: var(--muted); font-size: .72rem; }
+.match-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.match-card { min-width: 0; display: grid; grid-template-columns: minmax(120px, .72fr) minmax(0, 1fr); border: 1px solid var(--line); background: var(--paper-strong); }
+.match-card-image { position: relative; min-height: 230px; overflow: hidden; background: #e5dfd3; }
+.match-card-image img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+.match-card-body { min-width: 0; padding: 18px; display: flex; flex-direction: column; }
+.match-score { margin: 0; color: var(--green); font-size: .64rem; font-weight: 780; letter-spacing: .04em; }
+.match-score span { color: var(--pink); }
+.match-card h4 { margin: 9px 0 10px; font-family: var(--serif); font-size: 1.2rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.16; }
+.match-reasons { margin: 0; padding: 0; display: grid; gap: 5px; list-style: none; }
+.match-reasons li { position: relative; padding-left: 13px; color: #5f635c; font-size: .68rem; line-height: 1.42; }
+.match-reasons li::before { content: "·"; position: absolute; left: 1px; color: var(--pink); font-weight: 900; }
+.match-card-actions { margin-top: auto; padding-top: 13px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.match-card-actions .recipe-open { min-height: 38px; font-size: .72rem; }
+.match-card-actions .save-button { width: 38px; height: 38px; font-size: 1.1rem; }
+
 .nutrition-guide { padding: 112px 0 10px; }
 .nutrition-intro h2 { max-width: 690px; }
 .nutrient-chips { margin-top: 48px; padding-bottom: 18px; display: flex; flex-wrap: wrap; gap: 9px; border-bottom: 1px solid var(--line); }
@@ -589,6 +625,9 @@ button { color: inherit; }
   .hero-notices { grid-template-columns: 1fr 1fr; }
   .credential-notice { grid-column: 1 / -1; }
   .recipe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .match-form { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .match-card { grid-template-columns: 1fr; }
+  .match-card-image { min-height: 0; aspect-ratio: 5 / 3; }
   .notes-grid { grid-template-columns: repeat(2, 1fr); }
   .notes-grid article:nth-child(2) { border-right: 0; }
   .notes-grid article:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
@@ -606,6 +645,10 @@ button { color: inherit; }
   .hero-board { width: min(560px, calc(100% - 14px)); margin: 0 auto; }
   .trust-strip { flex-wrap: wrap; gap: 12px 22px; }
   .section-shell { width: min(100% - 32px, 1280px); }
+  .match-section { padding-top: 54px; }
+  .match-intro { grid-template-columns: 1fr; gap: 14px; }
+  .match-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .match-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .nutrition-guide { padding-top: 90px; }
   .nutrition-panel { grid-template-columns: 1fr; }
   .nutrient-summary { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -663,6 +706,15 @@ button { color: inherit; }
   .trust-item i { display: none; }
   .trust-strip p { text-align: center; }
   .section-shell { width: calc(100% - 32px); }
+  .match-shell { padding: 26px 20px; }
+  .match-intro h2 { font-size: 2.35rem; line-height: 1.08; }
+  .match-form { margin-top: 26px; grid-template-columns: 1fr; }
+  .match-status { align-items: flex-start; }
+  .match-prompt { align-items: flex-start; }
+  .match-results-heading { align-items: flex-start; flex-direction: column; gap: 3px; }
+  .match-grid { grid-template-columns: 1fr; }
+  .match-card { grid-template-columns: minmax(112px, .72fr) minmax(0, 1fr); }
+  .match-card-image { min-height: 230px; aspect-ratio: auto; }
   .section-intro h2 { font-size: 2.8rem; }
   .nutrition-intro h2 { font-size: 2.55rem; line-height: 1.05; }
   .nutrient-chips { margin-top: 34px; display: grid; grid-template-columns: 1fr 1fr; }

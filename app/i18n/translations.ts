@@ -1,4 +1,4 @@
-import type { CareContext, IngredientFilter, Language, MealType } from "../types/recipe";
+import type { CareContext, IngredientFilter, Language, MatchTimeBudget, MealType } from "../types/recipe";
 
 interface UiCopy {
   skipLink: string;
@@ -59,6 +59,34 @@ interface UiCopy {
   ingredientChoiceTip: {
     title: string;
     description: string;
+  };
+  match: {
+    eyebrow: string;
+    title: string;
+    titleSegments?: string[];
+    description: string;
+    formLabel: string;
+    mealType: string;
+    careContext: string;
+    timeBudget: string;
+    ingredient: string;
+    nutrient: string;
+    noPreference: string;
+    timeLabels: Record<MatchTimeBudget, string>;
+    selectedCount: (count: number) => string;
+    clear: string;
+    promptTitle: string;
+    promptText: string;
+    resultsTitle: string;
+    resultsSummary: (count: number) => string;
+    matchScore: (score: number) => string;
+    emptyTitle: string;
+    emptyText: string;
+    reasonMealType: (label: string) => string;
+    reasonCareContext: (label: string) => string;
+    reasonPrepTime: (minutes: number) => string;
+    reasonIngredient: (label: string) => string;
+    reasonNutrient: (label: string) => string;
   };
   explorer: {
     eyebrow: string;
@@ -182,6 +210,33 @@ const en: UiCopy = {
   ingredientChoiceTip: {
     title: "Ideas for choosing ingredients",
     description: "Combining dark leafy greens, colorful vegetables, fruit, fish, beans, nuts, and whole grains can bring a wider range of nutrients into everyday meals. When it suits the recipe, olive oil or another plant oil can also be used.",
+  },
+  match: {
+    eyebrow: "KitchenRx Match · local prototype",
+    title: "Find a meal for today",
+    description: "Select one or more conditions to see up to three recipes that match all of your selections.",
+    formLabel: "Conditions for today's meal",
+    mealType: "Meal type",
+    careContext: "Care context",
+    timeBudget: "Maximum cooking time",
+    ingredient: "Ingredient on hand",
+    nutrient: "Nutrient of interest",
+    noPreference: "No preference",
+    timeLabels: { "15": "Up to 15 minutes", "30": "Up to 30 minutes", "45": "Up to 45 minutes" },
+    selectedCount: (count) => `${count} ${count === 1 ? "condition" : "conditions"} selected`,
+    clear: "Clear selections",
+    promptTitle: "Choose at least one condition",
+    promptText: "Your selections stay on this page and are not saved.",
+    resultsTitle: "Recipes matching your conditions",
+    resultsSummary: (count) => `${count} ${count === 1 ? "recipe" : "recipes"} found`,
+    matchScore: (score) => `${score} ${score === 1 ? "condition" : "conditions"} matched`,
+    emptyTitle: "No recipes match all of these conditions.",
+    emptyText: "Remove one condition and try again.",
+    reasonMealType: (label) => `${label} recipe`,
+    reasonCareContext: (label) => `Fits ${label.toLowerCase()}`,
+    reasonPrepTime: (minutes) => `Ready in ${minutes} min`,
+    reasonIngredient: (label) => `Uses ${label.toLowerCase()}`,
+    reasonNutrient: (label) => `Uses an ingredient connected to ${label}`,
   },
   explorer: {
     eyebrow: "Recipe explorer",
@@ -323,6 +378,34 @@ const ja: UiCopy = {
   ingredientChoiceTip: {
     title: "食材を選ぶときのヒント",
     description: "濃い緑色の葉物野菜、色の濃い野菜、果物、魚、豆類、ナッツ、全粒穀物などを組み合わせると、さまざまな栄養素を日々の料理へ取り入れやすくなります。料理に合う場合は、オリーブ油などの植物油も選べます。",
+  },
+  match: {
+    eyebrow: "KitchenRx Match · ローカル試作",
+    title: "今日の一皿を見つける",
+    titleSegments: ["今日の一皿を", "見つける"],
+    description: "今日の条件をひとつ以上選ぶと、選択したすべての条件に一致するレシピを3件まで表示します。",
+    formLabel: "今日の食事条件",
+    mealType: "食事の種類",
+    careContext: "ケアの場面",
+    timeBudget: "最大調理時間",
+    ingredient: "手元の食材",
+    nutrient: "気になる栄養素",
+    noPreference: "指定なし",
+    timeLabels: { "15": "15分以内", "30": "30分以内", "45": "45分以内" },
+    selectedCount: (count) => `${count}項目を選択中`,
+    clear: "選択を解除",
+    promptTitle: "条件をひとつ以上選んでください",
+    promptText: "選んだ条件はこの画面だけで使い、保存しません。",
+    resultsTitle: "すべての条件に一致するレシピ",
+    resultsSummary: (count) => `${count}件のレシピを表示`,
+    matchScore: (score) => `${score}項目に一致`,
+    emptyTitle: "すべての条件に一致するレシピがありません。",
+    emptyText: "条件を一つ解除して、もう一度お試しください。",
+    reasonMealType: (label) => `${label}のレシピ`,
+    reasonCareContext: (label) => `${label}に合う`,
+    reasonPrepTime: (minutes) => `${minutes}分で完成`,
+    reasonIngredient: (label) => `${label}を使用`,
+    reasonNutrient: (label) => `${label}につながる食材を使用`,
   },
   explorer: {
     eyebrow: "レシピ検索",

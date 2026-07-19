@@ -25,6 +25,11 @@ test("server-renders the finished KitchenRx shell", async () => {
   assert.match(html, /Saved recipes and language preferences stay in this browser/);
   assert.match(html, /Grounded in culinary expertise/);
   assert.match(html, /licensed cook and confectionery hygienist in Japan/);
+  assert.match(html, /KitchenRx Match · local prototype/);
+  assert.match(html, /Find a meal for today/);
+  assert.match(html, /Select one or more conditions to see up to three recipes that match all of your selections/);
+  assert.match(html, /Conditions for today&#x27;s meal/);
+  assert.match(html, /Choose at least one condition/);
   assert.match(html, /Recipe explorer/);
   assert.match(html, /Food &amp; nutrient guide/);
   assert.match(html, /Explore the ingredients behind the meal/);
